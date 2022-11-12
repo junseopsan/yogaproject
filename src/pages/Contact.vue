@@ -18,10 +18,11 @@
 
             <!-- Contact form -->
             <Form
-              v-slot="{ errors }"
+              v-slot="{ errors, meta }"
+              ref="form"
               class="max-w-xl mx-auto"
               :validation-schema="schema"
-              @click.prevent=""
+              @click.prevent="false"
             >
               <div class="flex flex-wrap mb-4 -mx-3">
                 <div class="w-full px-3 mb-4 md:mb-0">
@@ -69,6 +70,7 @@
                     >전화번호 <span class="text-red-600">*</span></label
                   >
                   <Field
+                    v-model="fromPhone"
                     as="input"
                     type="text"
                     name="전화번호"
@@ -101,9 +103,10 @@
               </div>
               <div class="flex flex-wrap mb-4 -mx-3">
                 <div class="w-full px-3">
-                  <label class="flex items-center">
-                    <input v-model="isCheack" type="checkbox" class="form-checkbox" />
-                    <span class="ml-2 text-gray-400">개인정보수집 동의</span>
+                  <label class="flex items-center cursor-pointer">
+                    <!-- <input type="checkbox" checked="checked" /> -->
+                    <!-- <input v-model="agreement" class="form-checkbox" type="checkbox" />
+                    <span class="ml-2 text-gray-400">개인정보동의</span> -->
                   </label>
                 </div>
               </div>
@@ -111,6 +114,7 @@
                 <div class="w-full px-3">
                   <button
                     class="w-full text-white bg-purple-600 cursor-pointer btn hover:bg-purple-700 disabled:opacity-25"
+                    :disabled="!meta.valid"
                     @click="sendEmail"
                   >
                     보내기
@@ -175,36 +179,46 @@ export default {
     Footer,
   },
   data() {
-    const schema = {
-      이름: 'required',
-      전화번호: 'required|numeric|phone_valid',
-      이메일: 'required|email',
-      궁금한점: 'required',
-    };
     return {
+      isPersonal: true,
+      agreement: true,
       fromName: '',
       fromEmail: '',
+      fromPhone: '',
       message: '',
-      isCheack: false,
-      schema,
+      schema: {
+        이름: 'required',
+        전화번호: 'required|numeric|phone_valid',
+        이메일: 'required|email',
+        궁금한점: 'required',
+      },
     };
   },
   methods: {
     sendEmail() {
       const templateParams = {
         from_name: this.fromName,
-        fromEmail: this.fromEmail,
+        reply_to: this.fromEmail,
         message: this.message,
-        reply_to: 'ddd',
+        from_phone: this.fromPhone,
       };
+      this.emitter.emit('showSpinner', true);
       emailjs
         .send('service_vqus4pq', 'template_9to2m4d', templateParams, 'pHSl8pLQFMme-TogU')
         .then(
           (response) => {
-            console.log('SUCCESS!', response.status, response.text);
+            if (response.status === 200) {
+              this.emitter.emit('showSpinner', false);
+              this.fromName = '';
+              this.fromEmail = '';
+              this.message = '';
+              this.fromPhone = '';
+              this.$refs.form.resetForm();
+              this.emitter.emit('showToast', '메일이 전송되었습니다.');
+            }
           },
           (err) => {
-            console.log('FAILsssED...', err);
+            console.log('FAILED...', err);
           }
         );
     },
