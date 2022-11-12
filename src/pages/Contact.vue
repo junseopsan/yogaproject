@@ -204,7 +204,7 @@ export default {
             console.log('SUCCESS!', response.status, response.text);
           },
           (err) => {
-            console.log('FAILED...', err);
+            console.log('FAILsssED...', err);
           }
         );
     },
