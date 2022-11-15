@@ -25,6 +25,149 @@
             </select>
           </div>
 
+          <div class="container mx-auto">
+            <div
+              class="flex flex-wrap justify-center -mx-4"
+              data-aos="fade-up"
+              data-aos-delay="600"
+            >
+              <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div
+                  class="relative z-10 px-8 py-10 mb-10 overflow-hidden border border-primary shadow-pricing rounded-xl border-opacity-20 sm:p-12 lg:py-10 lg:px-6 xl:p-12"
+                >
+                  <span class="block mb-4 text-lg font-semibold text-primary">
+                    수련생
+                  </span>
+                  <h2 class="text-dark mb-5 text-[42px] font-bold">
+                    $59
+                    <span class="text-base font-medium text-body-color">
+                      / {{ selelctPeriod }}
+                    </span>
+                  </h2>
+                  <p
+                    class="text-body-color mb-8 border-b border-[#F2F2F2] pb-8 text-base"
+                  >
+                    Perfect for using in a personal website or a client project.
+                  </p>
+                  <div class="mb-7">
+                    <p class="mb-1 text-base leading-loose text-body-color">1 User</p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      All UI components
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Lifetime access
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Free updates
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Use on 1 (one) project
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      3 Months support
+                    </p>
+                  </div>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-primary hover:bg-primary hover:border-primary block w-full rounded-md border border-[#D4DEFF] bg-transparent p-4 text-center text-base font-semibold transition hover:text-white"
+                  >
+                    Choose Personal
+                  </a>
+                </div>
+              </div>
+              <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div
+                  class="relative z-10 px-8 py-10 mb-10 overflow-hidden border border-white-500 border-primary shadow-pricing rounded-xl border-opacity-20 sm:p-12 lg:py-10 lg:px-6 xl:p-12"
+                >
+                  <span class="block mb-4 text-lg font-semibold text-primary">
+                    수행자
+                  </span>
+                  <h2 class="text-dark mb-5 text-[42px] font-bold">
+                    $199
+                    <span class="text-base font-medium text-body-color">
+                      / {{ selelctPeriod }}
+                    </span>
+                  </h2>
+                  <p
+                    class="text-body-color mb-8 border-b border-[#F2F2F2] pb-8 text-base"
+                  >
+                    Perfect for using in a Business website or a client project.
+                  </p>
+                  <div class="mb-7">
+                    <p class="mb-1 text-base leading-loose text-body-color">5 Users</p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      All UI components
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Lifetime access
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Free updates
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Use on 3 (Three) project
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      4 Months support
+                    </p>
+                  </div>
+                  <a
+                    href="javascript:void(0)"
+                    class="block w-full p-4 text-base font-semibold text-center text-white transition border rounded-md bg-primary border-primary hover:bg-opacity-90"
+                  >
+                    Choose Business
+                  </a>
+                </div>
+              </div>
+              <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div
+                  class="relative z-10 px-8 py-10 mb-10 overflow-hidden border border-primary shadow-pricing rounded-xl border-opacity-20 sm:p-12 lg:py-10 lg:px-6 xl:p-12"
+                >
+                  <span class="block mb-4 text-lg font-semibold text-primary">
+                    Professional
+                  </span>
+                  <h2 class="text-dark mb-5 text-[42px] font-bold">
+                    $256
+                    <span class="text-base font-medium text-body-color">
+                      / {{ selelctPeriod }}
+                    </span>
+                  </h2>
+                  <p
+                    class="text-body-color mb-8 border-b border-[#F2F2F2] pb-8 text-base"
+                  >
+                    Perfect for using in a Professional website or a client project.
+                  </p>
+                  <div class="mb-7">
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Unlimited Users
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      All UI components
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Lifetime access
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Free updates
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      Use on Unlimited project
+                    </p>
+                    <p class="mb-1 text-base leading-loose text-body-color">
+                      12 Months support
+                    </p>
+                  </div>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-primary hover:bg-primary hover:border-primary block w-full rounded-md border border-[#D4DEFF] bg-transparent p-4 text-center text-base font-semibold transition hover:text-white"
+                  >
+                    Choose Professional
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div
             class="grid items-start justify-center max-w-sm gap-8 mx-auto lg:gap-6 lg:max-w-none"
           >
