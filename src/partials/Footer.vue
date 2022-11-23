@@ -1,16 +1,20 @@
 <template>
-  <footer class=" ">
+  <footer class="">
     <div class="py-12 md:py-16">
       <div class="max-w-6xl px-4 mx-auto sm:px-6">
         <div class="grid gap-8 mb-8 md:grid-cols-12 lg:gap-20 md:mb-12">
           <div class="md:col-span-4 lg:col-span-5">
-            <div class="text-gray-400">
-              <div class="text-2xl font-bold">요가 프로젝트</div>
-              <div class="font-bold">대표자 : 박지원</div>
-              <div class="font-bold">사업자번호 : 161-24-00029</div>
-              <div class="font-bold">주소 : 서울시 강남구 신사동 541-2번지 5층</div>
-              <div class="font-bold">주차 : 건물 앞 발렛주차 이용</div>
-              <div class="font-bold">Contact : 0506-050-0033 / 010-7139-1297</div>
+            <div class="">
+              <div class="text-2xl font-bold text-white-400">요가 프로젝트</div>
+              <div class="font-bold text-gray-400">대표자 : 박지원</div>
+              <div class="font-bold text-gray-400">사업자번호 : 161-24-00029</div>
+              <div class="font-bold text-gray-400">
+                주소 : 서울시 강남구 신사동 541-2번지 5층
+              </div>
+              <div class="font-bold text-gray-400">주차 : 건물 앞 발렛주차 이용</div>
+              <div class="font-bold text-gray-400">
+                Contact : 0506-050-0033 / 010-7139-1297
+              </div>
               <!-- 압구정 본원 : 서울시 강남구 압구정동 450 현대백화점 컬쳐파크 2층 전화 : 02-3447-9642 상호명 : 자이 현대백화점 컬쳐파크 압구정점
 대표자명 : 민진희 사업자등록증 : 747-85-0094 -->
             </div>
@@ -145,7 +149,7 @@
         <div class="md:flex md:items-center md:justify-between">
           <!-- Copyrights note -->
           <div class="mr-4 text-sm text-gray-400">
-            &copy; Copyright (C) 2022 YOGA PROJECT.
+            &copy; Copyright (C) 2022 YOGA PROJECT by San.
           </div>
         </div>
       </div>

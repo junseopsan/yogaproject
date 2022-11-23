@@ -32,7 +32,7 @@ module.exports = {
         '1/1': '100%',
       },
       fontFamily: {
-        'gamja-flower': ['Gamja Flower', 'sans-serif'],
+        'nanum-myeongjo': ['Nanum Myeongjo', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
         'architects-daughter': ['"Architects Daughter"', 'sans-serif'],
       },
@@ -67,5 +67,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [
+    require('tailwindcss'),
+    require('autoprefixer'),
+    require('@tailwindcss/forms'),
+  ],
 };

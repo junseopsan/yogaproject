@@ -13,7 +13,7 @@
       <TestimonialsCarousel />
       <Career />
       <Clients />
-      <Newsletter />
+      <!-- <Newsletter /> -->
     </main>
 
     <!-- Site footer -->
