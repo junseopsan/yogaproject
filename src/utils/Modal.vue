@@ -71,10 +71,10 @@ export default {
       if (this.show || this.$refs.modalContent.contains(e.target)) return;
       this.$emit('handleClose');
     },
-    keyPress() {
-      if (!this.show || event.keyCode !== 27) return;
-      this.$emit('handleClose');
-    },
+    // keyPress() {
+    //   if (!this.show || event.keyCode !== 27) return;
+    //   this.$emit('handleClose');
+    // },
   },
 };
 </script>

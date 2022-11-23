@@ -13,7 +13,7 @@
         <!-- Contact form -->
         <Form
           v-slot="{ errors, meta }"
-          ref="form"
+          ref="contact"
           class="max-w-xl mx-auto"
           :validation-schema="schema"
           @click.prevent="false"
@@ -30,7 +30,7 @@
                 type="text"
                 class="w-full text-gray-300 form-input"
                 :class="{ 'border-red-500 focus:border-red-500': errors.이름 }"
-                placeholder="박요프"
+                placeholder="이름을 입력해주세요."
                 rules="required"
               />
               <span class="mt-2 text-sm text-red-500">{{ errors.이름 }}</span>
@@ -48,7 +48,7 @@
                 name="이메일"
                 class="w-full text-gray-300 form-input"
                 :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
-                placeholder="yogaproject@gmail.com"
+                placeholder="이름을 입력해주세요."
                 rules="required"
               />
               <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
@@ -67,7 +67,7 @@
                 class="w-full text-gray-300 form-input"
                 :class="{ 'border-red-500 focus:border-red-500': errors.전화번호 }"
                 rules="required"
-                placeholder="01011112222"
+                placeholder="전화번호를 입력해주세요."
               />
               <span class="mt-2 text-sm text-red-500">{{ errors.전화번호 }}</span>
             </div>
@@ -167,6 +167,7 @@ export default {
       },
     };
   },
+  mounted() {},
   methods: {
     sendEmail() {
       this.emitter.emit('showConfirm', {
@@ -193,12 +194,7 @@ export default {
                 (response) => {
                   if (response.status === 200) {
                     this.emitter.emit('showSpinner', false);
-                    this.fromName = '';
-                    this.fromEmail = '';
-                    this.message = '';
-                    this.fromPhone = '';
-                    this.agreement = false;
-                    this.$refs.form.resetForm();
+                    this.$refs.contact.resetForm();
                     this.emitter.emit('showToast', '메일이 전송되었습니다.');
                   }
                 },

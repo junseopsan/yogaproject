@@ -27,6 +27,8 @@
     "vee-validate": "^4.7.2",
     "vue": "^3.2.20",
     "vue-router": "^4.0.12",
+    "vue-tailwind-datepicker": "^1.1.5",
+    "vue3-datepicker": "^0.3.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {

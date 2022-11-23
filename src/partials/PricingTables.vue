@@ -95,7 +95,7 @@
                   <div>
                     <button
                       class="text-primary hover:bg-primary hover:border-primary block w-full rounded-md border border-[#D4DEFF] bg-transparent p-4 text-center text-base font-semibold transition hover:text-white hover:bg-purple-700"
-                      @click="$emit('open')"
+                      @click="openPayScreen(item.type, item.className)"
                     >
                       수업 결제하기
                     </button>
@@ -121,8 +121,11 @@ export default {
       value: true,
       videoModalOpen: false,
       selectGeneral: '주 1회',
+      selectGeneralAmount: 99000,
       selectTarget: '한 번',
+      selectTargetAmount: 39000,
       selectPeak: '지도자과정',
+      selectPeakAmount: 390000,
       classList: [
         {
           type: 'general',
@@ -150,6 +153,25 @@ export default {
     };
   },
   methods: {
+    openPayScreen(type, className) {
+      let typeName = '';
+      let amount = '';
+      switch (type) {
+        case 'general':
+          amount = this.selectGeneralAmount;
+          typeName = this.selectGeneral;
+          break;
+        case 'target':
+          amount = this.selectTargetAmount;
+          typeName = this.selectTarget;
+          break;
+        case 'peak':
+          amount = this.selectPeakAmount;
+          typeName = this.selectPeak;
+          break;
+      }
+      this.$emit('open', { className: className, typeName: typeName, amount: amount });
+    },
     changeCommaNubmer(value) {
       return value.toLocaleString();
     },
@@ -160,26 +182,34 @@ export default {
       if (type === 'general') {
         switch (selectGeneral) {
           case '주 1회':
+            this.selectGeneralAmount = 99000;
             return this.changeCommaNubmer(99000);
           case '주 3회':
+            this.selectGeneralAmount = 190000;
             return this.changeCommaNubmer(190000);
           case '주 5회':
+            this.selectGeneralAmount = 290000;
             return this.changeCommaNubmer(290000);
           case '자유 한달':
+            this.selectGeneralAmount = 390000;
             return this.changeCommaNubmer(390000);
         }
       } else if (type === 'target') {
         switch (selectTarget) {
           case '한 번':
+            this.selectTargetAmount = 39000;
             return this.changeCommaNubmer(39000);
           case '열 번':
+            this.selectTargetAmount = 290000;
             return this.changeCommaNubmer(290000);
         }
       } else if (type === 'peak') {
         switch (selectPeak) {
           case '지도자과정':
+            this.selectPeakAmount = 390000;
             return this.changeCommaNubmer(390000);
           case '개인레슨':
+            this.selectPeakAmount = 110000;
             return this.changeCommaNubmer(110000);
         }
       }

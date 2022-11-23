@@ -1,5 +1,5 @@
 <template>
-  <div
+  <!-- <div
     v-if="isShowToast || isShowConfirm"
     style="
       position: fixed;
@@ -13,7 +13,7 @@
       border-style: solid;
       border-width: 0 0 2000px 0;
     "
-  ></div>
+  ></div> -->
   <div
     v-if="isShowConfirm"
     id="toast-undo"
@@ -127,7 +127,6 @@ export default {
       this.isShowConfirm = confirmInfo.isOpen;
       this.confirmMsg = confirmInfo.msg;
       this.callback = confirmInfo.callback;
-      console.log(this.callback);
     });
     this.emitter.on('showToast', this.showToast);
   },

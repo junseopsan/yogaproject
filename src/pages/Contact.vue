@@ -22,7 +22,7 @@
               ref="form"
               class="max-w-xl mx-auto"
               :validation-schema="schema"
-              @click.prevent="false"
+              @submit="sendEmail"
             >
               <div class="flex flex-wrap mb-4 -mx-3">
                 <div class="w-full px-3 mb-4 md:mb-0">
@@ -38,7 +38,7 @@
                     type="text"
                     class="w-full text-gray-300 form-input"
                     :class="{ 'border-red-500 focus:border-red-500': errors.이름 }"
-                    placeholder="박요프"
+                    placeholder="이름을 입력해주세요."
                     rules="required"
                   />
                   <span class="mt-2 text-sm text-red-500">{{ errors.이름 }}</span>
@@ -56,7 +56,7 @@
                     name="이메일"
                     class="w-full text-gray-300 form-input"
                     :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
-                    placeholder="yogaproject@gmail.com"
+                    placeholder="메일 주소를 입력해주세요."
                     rules="required"
                   />
                   <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
@@ -77,7 +77,7 @@
                     class="w-full text-gray-300 form-input"
                     :class="{ 'border-red-500 focus:border-red-500': errors.전화번호 }"
                     rules="required"
-                    placeholder="01011112222"
+                    placeholder="전화번호를 입력해주세요."
                   />
                   <span class="mt-2 text-sm text-red-500">{{ errors.전화번호 }}</span>
                 </div>
@@ -115,7 +115,6 @@
                   <button
                     class="w-full text-white bg-purple-600 cursor-pointer btn hover:bg-purple-700 disabled:opacity-25"
                     :disabled="!meta.valid"
-                    @click="sendEmail"
                   >
                     보내기
                   </button>
@@ -195,7 +194,8 @@ export default {
     };
   },
   methods: {
-    sendEmail() {
+    sendEmail(values) {
+      console.log(values);
       const templateParams = {
         from_name: this.fromName,
         reply_to: this.fromEmail,
@@ -208,13 +208,9 @@ export default {
         .then(
           (response) => {
             if (response.status === 200) {
-              this.emitter.emit('showSpinner', false);
-              this.fromName = '';
-              this.fromEmail = '';
-              this.message = '';
-              this.fromPhone = '';
               this.$refs.form.resetForm();
               this.emitter.emit('showToast', '메일이 전송되었습니다.');
+              this.emitter.emit('showSpinner', false);
             }
           },
           (err) => {

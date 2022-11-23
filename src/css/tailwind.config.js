@@ -1,9 +1,16 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
-  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './node_modules/vue-tailwind-datepicker/**/*.js',
+  ],
   theme: {
     extend: {
       colors: {
-        gray: {
+        'vtd-secondary': colors.gray, // Dark mode Datepicker color
+        'gray': {
           100: '#EBF1F5',
           200: '#D9E3EA',
           300: '#C5D2DC',
@@ -14,7 +21,7 @@ module.exports = {
           800: '#25282C',
           900: '#151719',
         },
-        purple: {
+        'purple': {
           100: '#F4F4FF',
           200: '#E2E1FF',
           300: '#CBCCFF',

@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import router from './router';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
+import VueTailwindDatepicker from 'vue-tailwind-datepicker';
 
 import base from './scripts/base';
 
@@ -13,6 +14,7 @@ import mitt from 'mitt';
 const emitter = mitt();
 const app = createApp(App);
 
+app.use(VueTailwindDatepicker);
 app.use(PrimeVue);
 app.mixin(base);
 
