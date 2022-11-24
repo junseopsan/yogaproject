@@ -84,10 +84,18 @@ export default {
       blogInfo: {},
     };
   },
+  computed: {},
+  watch: {
+    $route(to, from) {
+      if (to.fullPath != from.fullPath) {
+        this.postId = to.query.postId;
+        this.getBlogDetail();
+      }
+    },
+  },
   mounted() {
     const query = this.$route.query;
     if (query) this.postId = query.postId;
-
     this.getBlogDetail();
   },
   methods: {

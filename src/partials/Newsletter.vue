@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="max-w-6xl px-4 mx-auto sm:px-6">
+    <div id="story" class="max-w-6xl px-4 mx-auto sm:px-6">
       <!-- CTA box -->
       <div
         class="relative px-8 py-10 bg-purple-600 rounded-md md:py-16 md:px-12"

@@ -1,9 +1,9 @@
 <template>
-  <section>
+  <section id="story">
     <div class="max-w-6xl px-4 mx-auto sm:px-6">
       <div class="py-12 border-t border-gray-800 md:py-20">
         <!-- Section header -->
-        <div v-if="postId === 99" class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
+        <div v-if="postId === '99'" class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
           <h2 class="h2" data-aos="fade-up">요가프로젝트 이야기</h2>
         </div>
 
@@ -83,27 +83,24 @@ export default {
   name: 'News',
   props: {
     postId: {
-      type: Number,
-      default: 99,
+      type: String,
+      default: '99',
     },
   },
   data() {
     return {
+      isSecond: false,
       list: [],
-      urlList: [],
       imgListNumber: [],
-      tagList: [],
+      realList: [],
+      newPostId: '99',
     };
   },
-  computed: {
-    realList() {
-      const realList = [];
-      this.list.forEach((item, key) => {
-        if (this.postId !== item.id) {
-          realList.push({ ...item, imgUrl: this.urlList[key], tags: this.tagList[key] });
-        }
-      });
-      return realList.slice(0, 3);
+  watch: {
+    postId(newVal) {
+      this.newPostId = newVal;
+      this.realList = [];
+      if (this.isSecond) this.init();
     },
   },
   mounted() {
@@ -113,9 +110,18 @@ export default {
       list.forEach((item) => {
         this.getPostDetail(item.id);
       });
-    }, 1000);
+    }, 1200);
   },
   methods: {
+    init() {
+      this.getPostList();
+      setTimeout(() => {
+        const list = this.imgListNumber;
+        list.forEach((item) => {
+          this.getPostDetail(item.id);
+        });
+      }, 1200);
+    },
     async getPostList() {
       await axios
         .get(
@@ -125,7 +131,7 @@ export default {
           const result = res;
           if (result) {
             const list = result.data.tistory.item.posts;
-            this.list = list;
+            this.list = list.reverse();
             this.imgListNumber = list.map((item) => {
               return { id: item.id };
             });
@@ -133,7 +139,6 @@ export default {
         });
     },
     getPostDetail(id) {
-      let url = '';
       axios
         .get(
           `https://www.tistory.com/apis/post/read?access_token=4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0&output=json&blogName=junseopsan&postId=${id}`
@@ -143,25 +148,38 @@ export default {
           const item = result.data.tistory.item;
           const start = item.content.indexOf('https');
           const end = item.content.indexOf('/img');
-          url = item.content.substring(start, end + 8);
-          this.urlList.push(url);
-          if (item.tags.tag) {
-            this.tagList.push(item.tags.tag.join());
+          const url = item.content.substring(start, end + 8);
+
+          if (this.newPostId !== item.id) {
+            this.realList.push({
+              ...item,
+              imgUrl: url,
+              tags: item.tags.tag ? item.tags.tag.join() : null,
+            });
           }
+
+          this.realList = this.realList
+            .sort((prev, cur) => {
+              if (prev.id < cur.id) return 1;
+              if (prev.id > cur.id) return -1;
+            })
+            .slice(0, 3);
+
+          this.isSecond = true;
         });
     },
-    async getToken() {
-      // https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code
-      // 4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0
-      await axios
-        .get(
-          `https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code`
-        )
-        .then((res) => {
-          const result = res;
-          console.log(result);
-        });
-    },
+    // https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code
+    // 4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0
+    // async getToken() {
+    //   await axios
+    //     .get(
+    //       `https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code`
+    //     )
+    //     .then((res) => {
+    //       const result = res;
+    //       console.log(result);
+    //     });
+    // },
   },
 };
 </script>

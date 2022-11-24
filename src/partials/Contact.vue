@@ -1,5 +1,5 @@
 <template>
-  <section class="relative">
+  <section id="contact" class="relative">
     <div class="relative max-w-6xl px-4 mx-auto sm:px-6">
       <div class="pt-6 pb-12 md:pt-6 md:pb-20">
         <!-- Page header -->

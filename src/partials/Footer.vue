@@ -26,25 +26,19 @@
             <div class="text-sm">
               <h6 class="mb-1 font-medium text-gray-200">요가 프로젝트</h6>
               <ul>
+                <li class="mb-1"></li>
                 <li class="mb-1">
-                  <router-link
-                    to="#"
-                    class="text-gray-400 transition duration-150 ease-in-out hover:text-gray-100"
-                    >About</router-link
+                  <a
+                    href="/#hero"
+                    class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
+                    >수업 시간표</a
                   >
                 </li>
                 <li class="mb-1">
-                  <router-link
-                    to="#"
-                    class="text-gray-400 transition duration-150 ease-in-out hover:text-gray-100"
-                    >수업 시간표</router-link
-                  >
-                </li>
-                <li class="mb-1">
-                  <router-link
-                    to="#"
-                    class="text-gray-400 transition duration-150 ease-in-out hover:text-gray-100"
-                    >수업 신청하기</router-link
+                  <a
+                    href="/#often"
+                    class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
+                    >자주묻는 질문</a
                   >
                 </li>
               </ul>
@@ -52,20 +46,20 @@
 
             <!-- 3rd block -->
             <div class="text-sm">
-              <h6 class="mb-1 font-medium text-gray-200">도움</h6>
+              <h6 class="mb-1 font-medium text-gray-200">요프로 오세요</h6>
               <ul>
                 <li class="mb-1">
-                  <router-link
-                    to="#"
-                    class="text-gray-400 transition duration-150 ease-in-out hover:text-gray-100"
-                    >Contact</router-link
+                  <a
+                    href="/#story"
+                    class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
+                    >요프 이야기</a
                   >
                 </li>
                 <li class="mb-1">
-                  <router-link
-                    to="#"
-                    class="text-gray-400 transition duration-150 ease-in-out hover:text-gray-100"
-                    >FAQ</router-link
+                  <a
+                    href="/#contact"
+                    class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
+                    >Contact</a
                   >
                 </li>
               </ul>

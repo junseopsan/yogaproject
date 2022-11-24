@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="hero">
     <div class="max-w-6xl px-4 mx-auto sm:px-6">
       <div class="pt-10 pb-12 md:pt-16 md:pb-20">
         <!-- Section header -->
