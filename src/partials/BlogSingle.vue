@@ -1,5 +1,5 @@
 <template>
-  <section class="relative">
+  <section class="relative blog">
     <div class="max-w-6xl px-4 mx-auto sm:px-6">
       <div class="pt-32 pb-12 md:pt-40 md:pb-20">
         <div class="max-w-3xl mx-auto">
@@ -20,13 +20,12 @@
                   data-aos-delay="400"
                 >
                   <div>
-                    <a
-                      class="font-medium text-gray-200 transition duration-150 ease-in-out hover:text-gray-100"
-                      href="#0"
-                      >G1</a
+                    <span
+                      class="text-3xl font-bold text-gray-200 transition duration-150 ease-in-out hover:text-gray-100"
+                      >G1</span
                     >
                     <span class="text-gray-700"> - </span>
-                    <span class="text-gray-500">{{ blogInfo.date }}</span>
+                    <span class="text-lg text-gray-500">{{ blogInfo.date }}</span>
                   </div>
                 </div>
                 <!-- Article tags -->
@@ -40,10 +39,10 @@
                       <li v-for="(item, key) in blogInfo.tags" :key="key" class="m-1">
                         <template v-for="(sub, index) in item" :key="index">
                           <a
-                            class="inline-flex px-3 py-1 text-center text-gray-100 transition duration-150 ease-in-out rounded-full"
+                            class="inline-flex px-3 py-1 ml-2 text-center text-gray-100 transition duration-150 ease-in-out rounded-full"
                             :class="{
-                              'bg-purple-600 hover:bg-purple-700': key % 2 === 0,
-                              'bg-pink-600 hover:bg-pink-700': key % 2 !== 0,
+                              'bg-purple-600 hover:bg-purple-700': index % 2 === 0,
+                              'bg-pink-600 hover:bg-pink-700': index % 2 !== 0,
                             }"
                             >{{ sub }}</a
                           >
@@ -114,3 +113,10 @@ export default {
   },
 };
 </script>
+<style>
+.blog span {
+  color: darkgray !important;
+  font-weight: bold;
+  background: none !important;
+}
+</style>

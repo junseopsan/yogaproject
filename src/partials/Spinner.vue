@@ -9,7 +9,7 @@
       height: 100%;
       z-index: 100;
       opacity: 0.5;
-      border-color: black;
+      border-color: dimgray;
       border-style: solid;
       border-width: 0 0 2000px 0;
     "
@@ -21,7 +21,7 @@
   >
     <svg
       aria-hidden="true"
-      class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-red-600"
+      class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-200"
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

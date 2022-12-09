@@ -3,8 +3,10 @@
     <div class="relative max-w-6xl px-4 mx-auto sm:px-6">
       <div class="pt-6 pb-12 md:pt-6 md:pb-20">
         <!-- Page header -->
-        <div class="max-w-3xl pb-12 mx-auto text-center md:pb-16">
-          <h1 class="mb-4 h1" data-aos="fade-up">무엇을 도와드릴까요?</h1>
+        <div class="pb-12 mx-auto text-center md:pb-16">
+          <div class="mb-4 text-3xl md:text-3xl sm:text-3xl" data-aos="fade-up">
+            무엇을 도와드릴까요?
+          </div>
           <p class="text-xl text-gray-400" data-aos="fade-up" data-aos-delay="200">
             편하게 물어봐주세요.
           </p>
@@ -18,7 +20,7 @@
           :validation-schema="schema"
           @click.prevent="false"
         >
-          <div class="flex flex-wrap mb-4 -mx-3">
+          <div class="flex flex-wrap -mx-3">
             <div class="w-full px-3 mb-4 md:mb-0">
               <label class="block mb-1 text-sm font-medium text-gray-300" for="first-name"
                 >이름<span class="text-red-600">*</span></label
@@ -28,7 +30,7 @@
                 as="input"
                 name="이름"
                 type="text"
-                class="w-full text-gray-300 form-input"
+                class="form-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white"
                 :class="{ 'border-red-500 focus:border-red-500': errors.이름 }"
                 placeholder="이름을 입력해주세요."
                 rules="required"
@@ -36,8 +38,8 @@
               <span class="mt-2 text-sm text-red-500">{{ errors.이름 }}</span>
             </div>
           </div>
-          <div class="flex flex-wrap mb-4 -mx-3">
-            <div class="w-full px-3">
+          <div class="flex flex-wrap -mx-3">
+            <div class="w-full px-3 mb-4 md:mb-0">
               <label class="block mb-1 text-sm font-medium text-gray-300" for="email"
                 >이메일 <span class="text-red-600">*</span></label
               >
@@ -46,7 +48,7 @@
                 as="input"
                 type="email"
                 name="이메일"
-                class="w-full text-gray-300 form-input"
+                class="form-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white"
                 :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
                 placeholder="이름을 입력해주세요."
                 rules="required"
@@ -54,8 +56,8 @@
               <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
             </div>
           </div>
-          <div class="flex flex-wrap mb-4 -mx-3">
-            <div class="w-full px-3">
+          <div class="flex flex-wrap -mx-3">
+            <div class="w-full px-3 mb-4 md:mb-0">
               <label class="block mb-1 text-sm font-medium text-gray-300" for="subject"
                 >전화번호 <span class="text-red-600">*</span></label
               >
@@ -64,7 +66,7 @@
                 as="input"
                 type="text"
                 name="전화번호"
-                class="w-full text-gray-300 form-input"
+                class="form-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white"
                 :class="{ 'border-red-500 focus:border-red-500': errors.전화번호 }"
                 rules="required"
                 placeholder="전화번호를 입력해주세요."
@@ -72,8 +74,8 @@
               <span class="mt-2 text-sm text-red-500">{{ errors.전화번호 }}</span>
             </div>
           </div>
-          <div class="flex flex-wrap mb-4 -mx-3">
-            <div class="w-full px-3">
+          <div class="flex flex-wrap -mx-3">
+            <div class="w-full px-3 mb-4 md:mb-0">
               <label class="block mb-1 text-sm font-medium text-gray-300" for="message"
                 >궁금한 점</label
               >
@@ -82,7 +84,7 @@
                 as="textarea"
                 name="궁금한점"
                 rows="4"
-                class="w-full text-gray-300 form-textarea"
+                class="form-textarea bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white"
                 :class="{ 'border-red-500 focus:border-red-500': errors.궁금한점 }"
                 placeholder="궁금한 점을 남겨주세요."
               ></Field>
@@ -92,7 +94,7 @@
           <div class="flex flex-wrap mt-6 -mx-3">
             <div class="w-full px-3">
               <button
-                class="w-full text-white bg-purple-600 cursor-pointer btn hover:bg-purple-700 disabled:opacity-25"
+                class="w-full text-white bg-blue-600 rounded-lg cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                 :disabled="!meta.valid"
                 @click="sendEmail"
               >

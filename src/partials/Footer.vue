@@ -13,6 +13,9 @@
               </div>
               <div class="font-bold text-gray-400">주차 : 건물 앞 발렛주차 이용</div>
               <div class="font-bold text-gray-400">
+                Bank : 신한은행 612-06-510843 요가프로젝트
+              </div>
+              <div class="font-bold text-gray-400">
                 Contact : 0506-050-0033 / 010-7139-1297
               </div>
               <!-- 압구정 본원 : 서울시 강남구 압구정동 450 현대백화점 컬쳐파크 2층 전화 : 02-3447-9642 상호명 : 자이 현대백화점 컬쳐파크 압구정점
@@ -24,7 +27,6 @@
           <div class="grid gap-8 md:col-span-8 lg:col-span-7 sm:grid-cols-3">
             <!-- 2nd block -->
             <div class="text-sm">
-              <h6 class="mb-1 font-medium text-gray-200">요가 프로젝트</h6>
               <ul>
                 <li class="mb-1"></li>
                 <li class="mb-1">
@@ -34,19 +36,18 @@
                     >수업 시간표</a
                   >
                 </li>
-                <li class="mb-1">
+                <!-- <li class="mb-1">
                   <a
                     href="/#often"
                     class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
                     >자주묻는 질문</a
                   >
-                </li>
+                </li> -->
               </ul>
             </div>
 
             <!-- 3rd block -->
             <div class="text-sm">
-              <h6 class="mb-1 font-medium text-gray-200">요프로 오세요</h6>
               <ul>
                 <li class="mb-1">
                   <a
@@ -67,7 +68,6 @@
 
             <!-- 4th block -->
             <div class="text-sm">
-              <h6 class="mb-1 font-medium text-gray-200">요프를 만나보세요</h6>
               <ul>
                 <li class="mb-1 h-[23px]">
                   <a

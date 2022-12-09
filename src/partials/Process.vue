@@ -31,7 +31,7 @@
               ></path>
             </svg>
 
-            <h4 class="mb-2 h4">월화수목금 낮 11시</h4>
+            <h4 class="mb-2 h4">월화수목금토일 낮 11시</h4>
             <p class="text-lg text-center text-gray-400">
               상황에 따라서 차담, 다식 등의 시간<br />
               완벽할 순 없어도, 때론 온전하지 않아도<br />
@@ -91,7 +91,8 @@
             </svg>
             <h4 class="mb-2 h4">온라인 동시진행</h4>
             <p class="text-lg text-center text-gray-400">
-              모든 수업은 온라인요가 (Zoom) 동시진행
+              모든 수업은 온라인요가 (Zoom)<br />
+              동시진행
             </p>
           </div>
         </div>

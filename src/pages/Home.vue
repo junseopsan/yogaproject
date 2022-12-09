@@ -7,7 +7,7 @@
     <main class="grow">
       <!-- Page sections -->
       <HeroHome />
-      <Faqs />
+      <!-- <Faqs /> -->
       <News />
       <Contact />
       <Spinner />

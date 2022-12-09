@@ -144,6 +144,10 @@ export default {
     showToast(msg) {
       this.isShowToast = true;
       this.msg = msg;
+
+      setTimeout(() => {
+        this.close();
+      }, 3000);
     },
     confirmClose() {
       this.isShowConfirm = false;
