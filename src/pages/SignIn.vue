@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen overflow-hidden">
-    <!-- Site header -->
-    <Header />
+    <Header :is-show-user="false" />
 
     <!-- Page content -->
     <main class="grow">
@@ -10,12 +9,12 @@
           <div class="pt-32 pb-12 md:pt-40 md:pb-20">
             <!-- Page header -->
             <div class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-              <h1 class="h1">어서오세요.</h1>
+              <h1 class="h1">요프에 온걸 환영해요.</h1>
             </div>
 
             <!-- Form -->
             <div class="max-w-sm mx-auto">
-              <form>
+              <!-- <form>
                 <div class="flex flex-wrap -mx-3">
                   <div class="w-full px-3">
                     <button
@@ -38,8 +37,8 @@
                     </button>
                   </div>
                 </div>
-              </form>
-              <div class="flex items-center my-6">
+              </form> -->
+              <!-- <div class="flex items-center my-6">
                 <div
                   class="mr-3 border-t border-gray-700 border-dotted grow"
                   aria-hidden="true"
@@ -49,73 +48,66 @@
                   class="ml-3 border-t border-gray-700 border-dotted grow"
                   aria-hidden="true"
                 ></div>
+              </div> -->
+              <div class="flex flex-wrap mb-4 -mx-3">
+                <div class="w-full px-3">
+                  <label class="block mb-1 text-sm font-medium text-gray-300" for="email"
+                    >Email</label
+                  >
+                  <input
+                    v-model="email"
+                    type="email"
+                    class="w-full text-gray-300 form-input"
+                    placeholder="이메일을 입력해주세요."
+                  />
+                </div>
               </div>
-              <form>
-                <div class="flex flex-wrap mb-4 -mx-3">
-                  <div class="w-full px-3">
-                    <label
-                      class="block mb-1 text-sm font-medium text-gray-300"
-                      for="email"
-                      >Email</label
-                    >
-                    <input
-                      id="email"
-                      type="email"
-                      class="w-full text-gray-300 form-input"
-                      placeholder="you@yourcompany.com"
-                      autocomplete
-                      required
-                    />
-                  </div>
+              <div class="flex flex-wrap mb-4 -mx-3">
+                <div class="w-full px-3">
+                  <label
+                    class="block mb-1 text-sm font-medium text-gray-300"
+                    for="password"
+                    >Password</label
+                  >
+                  <input
+                    v-model="password"
+                    type="password"
+                    class="w-full text-gray-300 form-input"
+                    placeholder="비밀번호를 입력해주세요."
+                  />
                 </div>
-                <div class="flex flex-wrap mb-4 -mx-3">
-                  <div class="w-full px-3">
-                    <label
-                      class="block mb-1 text-sm font-medium text-gray-300"
-                      for="password"
-                      >Password</label
-                    >
-                    <input
-                      id="password"
-                      type="password"
-                      class="w-full text-gray-300 form-input"
-                      placeholder="Password (at least 10 characters)"
-                      autocomplete
-                      required
-                    />
-                  </div>
-                </div>
-                <div class="flex flex-wrap mb-4 -mx-3">
-                  <div class="w-full px-3">
-                    <div class="flex justify-between">
-                      <label class="flex items-center">
+              </div>
+              <div class="flex flex-wrap mb-4 -mx-3">
+                <div class="w-full px-3">
+                  <div class="flex justify-between">
+                    <!-- <label class="flex items-center">
                         <input type="checkbox" class="form-checkbox" />
                         <span class="ml-2 text-gray-400">Keep me signed in</span>
-                      </label>
-                      <router-link
-                        to="/reset-password"
-                        class="text-purple-600 transition duration-150 ease-in-out hover:text-gray-200"
-                        >Forgot Password?</router-link
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="flex flex-wrap mt-6 -mx-3">
-                  <div class="w-full px-3">
-                    <button
-                      class="w-full text-white bg-purple-600 btn hover:bg-purple-700"
+                      </label> -->
+                    <router-link
+                      to="/reset-password"
+                      class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
+                      >Forgot Password?</router-link
                     >
-                      Sign in
-                    </button>
                   </div>
                 </div>
-              </form>
+              </div>
+              <div class="flex flex-wrap mt-6 -mx-3">
+                <div class="w-full px-3">
+                  <button
+                    class="w-full text-white bg-blue-600 btn hover:bg-blue-700"
+                    @click="login"
+                  >
+                    로그인
+                  </button>
+                </div>
+              </div>
               <div class="mt-6 text-center text-gray-400">
                 Don’t you have an account?
                 <router-link
                   to="/signup"
-                  class="text-purple-600 transition duration-150 ease-in-out hover:text-gray-200"
-                  >Sign up</router-link
+                  class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
+                  >회원가입</router-link
                 >
               </div>
             </div>
@@ -131,15 +123,41 @@
 
 <script>
 import Header from './../partials/Header.vue';
-import PageIllustration from '../partials/PageIllustration.vue';
 import Footer from './../partials/Footer.vue';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default {
   name: 'SignIn',
   components: {
     Header,
-    PageIllustration,
     Footer,
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    login() {
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          this.$router.push({ path: '/' });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.log(errorCode);
+          if (errorCode === 'auth/user-not-found') {
+            this.emitter.emit('showToast', '유저를 찾을 수 없습니다.');
+          }
+          if (errorCode === 'auth/wrong-password') {
+            this.emitter.emit('showToast', '비밀번호가 일치하지 않습니다.');
+          }
+        });
+    },
   },
 };
 </script>

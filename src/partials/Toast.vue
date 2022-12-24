@@ -147,7 +147,7 @@ export default {
 
       setTimeout(() => {
         this.close();
-      }, 3000);
+      }, 2000);
     },
     confirmClose() {
       this.isShowConfirm = false;

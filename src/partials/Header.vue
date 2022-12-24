@@ -72,22 +72,45 @@
           </ul>
 
           <!-- Desktop sign in links -->
-          <!-- <ul class="flex flex-wrap items-center justify-end grow">
+          <ul
+            v-if="isShowUser && username === ''"
+            class="flex flex-wrap items-center justify-end grow"
+          >
             <li>
               <router-link
                 to="/signin"
-                class="flex items-center px-4 py-3 font-medium text-purple-600 transition duration-150 ease-in-out hover:text-gray-200"
-                >Sign in</router-link
+                class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out font-bolder hover:text-gray-200"
+                >로그인</router-link
               >
             </li>
             <li>
               <router-link
                 to="/signup"
-                class="ml-3 text-white bg-purple-600 btn-sm hover:bg-purple-700"
-                >Sign up</router-link
+                class="ml-3 text-white bg-purple-600 font-bolder btn-sm hover:bg-purple-700"
+                >회원가입</router-link
               >
             </li>
-          </ul> -->
+          </ul>
+          <ul
+            v-else-if="isShowUser && username !== ''"
+            class="flex flex-wrap items-center justify-end grow"
+          >
+            <li>
+              <span
+                to="/signin"
+                class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out font-bolder hover:text-gray-200"
+                >환영해요, {{ username }}님</span
+              >
+            </li>
+            <li v-if="isLoggedIn">
+              <button
+                class="ml-3 text-white bg-purple-600 rounded-sm font-bolder btn-sm hover:bg-blue-700"
+                @click="logout"
+              >
+                로그아웃
+              </button>
+            </li>
+          </ul>
         </nav>
 
         <!-- Mobile menu -->
@@ -179,7 +202,7 @@
                   </li>
                 </ul>
               </li> -->
-              <!-- <li>
+              <li>
                 <router-link
                   to="/signin"
                   class="flex justify-center w-full py-2 font-medium text-purple-600 hover:text-gray-200"
@@ -192,7 +215,7 @@
                   class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-purple-600 border border-transparent rounded-sm hover:bg-purple-700"
                   >회원가입</router-link
                 >
-              </li> -->
+              </li>
             </ul>
           </nav>
         </div>
@@ -203,26 +226,79 @@
 
 <script>
 import Dropdown from './../utils/Dropdown.vue';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 
 export default {
   name: 'Header',
   components: {
     Dropdown,
   },
+  props: {
+    isShowUser: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data: function () {
     return {
       mobileNavOpen: false,
+      username: '',
+      isLoggedIn: false,
     };
   },
+  computed: {
+    displayName() {
+      return this.username;
+    },
+  },
+  created() {},
   mounted() {
+    console.log(11111);
+    const auth = getAuth();
+
     document.addEventListener('click', this.clickOutside);
     document.addEventListener('keydown', this.keyPress);
+    // this.getUserInfo();
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        this.isLoggedIn = true;
+        const currentUser = auth.currentUser;
+        this.username = currentUser?.displayName;
+      } else {
+        // User is signed out
+        this.isLoggedIn = false;
+      }
+    });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.clickOutside);
     document.removeEventListener('keydown', this.keyPress);
   },
   methods: {
+    async logout() {
+      const auth = getAuth();
+      await signOut(auth).then(() => {
+        this.$router.push({ path: '/signin' });
+      });
+    },
+    getUserInfo() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user !== null) {
+        // The user object has basic properties such as display name, email, etc.
+        this.username = user.displayName;
+        // const email = user.email;
+        // const photoURL = user.photoURL;
+        // const emailVerified = user.emailVerified;
+
+        // The user's ID, unique to the Firebase project. Do NOT use
+        // this value to authenticate with your backend server, if
+        // you have one. Use User.getToken() instead.
+        // const uid = user.uid;
+      }
+    },
     clickOutside(e) {
       if (
         !this.mobileNavOpen ||

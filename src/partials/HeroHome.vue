@@ -9,7 +9,11 @@
           data-aos-delay="100"
           data-aos="fade-up"
         >
-          <h1 class="mb-4 text-center h1" v-html="mainText"></h1>
+          <h1 class="mb-4 text-center h1">
+            " 행복하세요.<br />
+            밝게 지내요. <br />
+            있는 그대로의 자신이 되세요. "
+          </h1>
         </div>
         <Process />
         <!-- Hero image -->
@@ -155,8 +159,8 @@
                     </div>
                     <div
                       v-if="
-                        modalInfo.className === '그룹요가' ||
-                        (modalInfo.className === '스페셜요가' &&
+                        modalInfo.className === 'Together 요가프로젝트' ||
+                        (modalInfo.className === 'Wonderful 요가프로젝트' &&
                           modalInfo.typeName === '지도자과정')
                       "
                     >
@@ -180,7 +184,7 @@
                       <label
                         for="password"
                         class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
-                        >수련 시작일</label
+                        >수련 시작일{{ modalInfo.className }}</label
                       >
                       <div
                         class="relative"
@@ -467,67 +471,20 @@ export default {
     },
   },
   mounted() {
-    this.getList();
+    // this.getList();
   },
   methods: {
     dDate(date) {
       return date < new Date();
     },
     async goPay() {
-      async function sha256(message) {
-        // encode as UTF-8
-        const msgBuffer = new TextEncoder('utf-8').encode(message);
-
-        // hash the message
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-
-        // convert ArrayBuffer to Array
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-        // convert bytes to hex string
-        const hashHex = hashArray.map((b) => ('00' + b.toString(16)).slice(-2)).join('');
-        console.log(hashHex);
-        return hashHex;
-      }
-      const getSha256 = sha256('1612400029-100000002,01083138230,39000');
-
-      setTimeout(() => {
-        console.log(getSha256);
-      }, 1000);
-
-      const payload = {
-        apikey: 'TEST-API-KEY-TALK',
-        member: 'ERP_U_01',
-        merchant: 'ERP_M_01',
-        bill: {
-          bill_id: '1612400029-100000001',
-          product_nm:
-            this.modalInfo.className +
-            ' : ' +
-            this.modalInfo.typeName +
-            ', ' +
-            this.selectPeriod +
-            ', ' +
-            '수련기간 : ' +
-            this.startDate +
-            '~' +
-            this.endDate,
-          message: '테스트중입니다.',
-          member_nm: this.guestInfo.name,
-          phone: this.guestInfo.phoneNumber,
-          price: this.selectedAmount,
-          hash: 'a0213f3f9e45e8540e91a1339e0c5deee2dd27c4cb6b039436538c316bb45fa6',
-          expire_dt: '2099-12-31',
-          callbackURL: 'https://www.yogaproject.kr',
-        },
-      };
-
       this.emitter.emit('showSpinner', true);
       await axios
         .get(
-          `https://script.google.com/macros/s/AKfycbxnyxA6FvWaWcnhW4KmEPVkPKZj3Q1Zv0A8jGmGBOO-2eD252zdzVoo47v2dUzQ6kdkSQ/exec`,
+          `https://script.google.com/macros/s/AKfycbzHTEYacVvh_4tMZ11yadKcDqoAIzySK8HAdiIulBz2Twy3TO6y4wlYFXfX2ngc0O7Fmg/exec`,
           {
             params: {
+              신청일: moment().format('YYYY-MM-DD'),
               이름: this.guestInfo.name,
               전화번호: this.guestInfo.phoneNumber,
               수업이름: this.modalInfo.className + ' : ' + this.modalInfo.typeName,
@@ -535,6 +492,7 @@ export default {
               수련기간: this.selectPeriod,
               수련시작일: this.startDate,
               수련종료일: this.endDate,
+              하고싶은말: this.guestInfo.somethingText,
               할인: this.dicountPercent !== 0 ? this.dicountPercent + '% 할인' : '',
               수련금액: this.selectedAmount,
               결제방법: this.selectPayMethod,
@@ -550,7 +508,6 @@ export default {
             this.close();
           }
         });
-      console.log(payload);
     },
     payModalOpen(value) {
       const modalInfo = this.modalInfo;
