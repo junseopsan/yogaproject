@@ -12,51 +12,73 @@
             </div>
 
             <!-- Form -->
-            <div class="max-w-sm mx-auto">
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <label
-                    class="block mb-1 text-sm font-medium text-gray-300"
-                    for="full-name"
-                    >Full Name <span class="text-red-600">*</span></label
-                  >
-                  <input
-                    v-model="name"
-                    type="text"
-                    class="w-full text-gray-300 form-input"
-                    placeholder="이름을 입력해주세요."
-                  />
+            <Form
+              v-slot="{ errors, meta }"
+              ref="form"
+              class="max-w-xl mx-auto"
+              :validation-schema="schema"
+              @click.prevent="false"
+            >
+              <div class="max-w-sm mx-auto">
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="full-name"
+                      >이름 <span class="text-red-600">*</span></label
+                    >
+                    <Field
+                      v-model="name"
+                      as="input"
+                      name="이름"
+                      type="text"
+                      class="w-full text-gray-300 form-input"
+                      :class="{ 'border-red-500 focus:border-red-500': errors.이름 }"
+                      placeholder="이름을 입력해주세요."
+                      rules="required"
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{ errors.이름 }}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <label class="block mb-1 text-sm font-medium text-gray-300" for="email"
-                    >이메일<span class="text-red-600">*</span></label
-                  >
-                  <input
-                    v-model="email"
-                    type="email"
-                    class="w-full text-gray-300 form-input"
-                    placeholder="이메일을 입력해주세요."
-                  />
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="email"
+                      >이메일<span class="text-red-600">*</span></label
+                    >
+                    <Field
+                      v-model="email"
+                      as="input"
+                      type="email"
+                      name="이메일"
+                      class="w-full text-gray-300 form-input"
+                      :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
+                      placeholder="이메일을 입력해주세요."
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <label
-                    class="block mb-1 text-sm font-medium text-gray-300"
-                    for="password"
-                    >비밀번호<span class="text-red-600">*</span></label
-                  >
-                  <input
-                    v-model="password"
-                    type="password"
-                    class="w-full text-gray-300 form-input"
-                    placeholder="비밀번호는 6자(영문 기준) 이상이어야 합니다."
-                  />
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="password"
+                      >비밀번호<span class="text-red-600">*</span></label
+                    >
+                    <Field
+                      v-model="password"
+                      as="input"
+                      type="password"
+                      name="비밀번호"
+                      class="w-full text-gray-300 form-input"
+                      :class="{ 'border-red-500 focus:border-red-500': errors.비밀번호 }"
+                      placeholder="비밀번호를 입력해주세요."
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{ errors.비밀번호 }}</span>
+                  </div>
                 </div>
-              </div>
-              <!-- <div class="text-sm text-center text-gray-500">
+                <!-- <div class="text-sm text-center text-gray-500">
                   I agree to be contacted by Open PRO about this offer as per the Open PRO
                   <a
                     class="text-gray-400 underline transition duration-150 ease-in-out hover:text-gray-200 hover:no-underline"
@@ -64,23 +86,19 @@
                     >Privacy Policy</a
                   >.
                 </div> -->
-              <div class="flex flex-wrap mt-6 -mx-3">
-                <div class="w-full px-3">
-                  <button
-                    class="w-full text-white bg-blue-600 btn hover:bg-blue-700"
-                    @click="signup()"
-                  >
-                    Sign up
-                  </button>
-                  <!-- <button
-                    class="w-full text-white bg-purple-600 btn hover:bg-purple-700"
-                    @click="updateProfile()"
-                  >
-                    update
-                  </button> -->
+                <div class="flex flex-wrap mt-6 -mx-3">
+                  <div class="w-full px-3">
+                    <button
+                      class="w-full text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      :disabled="!meta.valid"
+                      @click="signup()"
+                    >
+                      회원가입
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Form>
           </div>
         </div>
       </section>
@@ -93,52 +111,58 @@
 
 <script>
 import Header from './../partials/Header.vue';
-import PageIllustration from '../partials/PageIllustration.vue';
 import Footer from './../partials/Footer.vue';
-// import firebase from 'firebase';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
+import { required, email } from '@vee-validate/rules';
+import { localize } from '@vee-validate/i18n';
+
+defineRule('required', required);
+defineRule('email', email);
+defineRule('password_valid', (value) => {
+  const regExp = /^.{8,}$/;
+
+  if (!regExp.test(value)) {
+    return '최소 8자 이상 입력해주세요.';
+  } else {
+    return true;
+  }
+});
+
+configure({
+  // create and set a localization handler
+  generateMessage: localize('en', {
+    messages: {
+      required: '{field}을 입력해주세요.',
+      email: '{field}을 정확히 입력해주세요.',
+    },
+  }),
+});
 
 export default {
   name: 'SignUp',
   components: {
     Header,
-    PageIllustration,
     Footer,
+    Field,
+    Form,
+    ErrorMessage,
   },
   data() {
     return {
+      name: '박준섭',
       email: '',
       password: '',
-      name: '박준섭',
+      schema: {
+        이름: 'required',
+        이메일: 'required|email',
+        비밀번호: 'required|password_valid',
+      },
     };
   },
   mounted() {},
   methods: {
-    async updateProfile() {},
-    async signup() {
-      if (!this.email) {
-        this.emitter.emit('showToast', '이메일을 입력해주세요.');
-        return;
-      }
-
-      if (!this.password) {
-        this.emitter.emit('showToast', '암호를 입력하여 주십시오.');
-        return;
-      }
-      await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error.code);
-          if (error.code === 'auth/email-already-in-use') {
-            this.emitter.emit('showToast', '이미 존재하는 이메일입니다.');
-            this.email = '';
-            this.password = '';
-            return;
-          }
-        });
-
+    async updateProfile() {
       await updateProfile(getAuth().currentUser, { displayName: this.name })
         .then((res) => {
           console.log(res);
@@ -146,6 +170,21 @@ export default {
         })
         .catch((error) => {
           console.log(error.code);
+        });
+    },
+    async signup() {
+      await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
+        .then((res) => {
+          console.log(res);
+          this.updateProfile();
+        })
+        .catch((error) => {
+          console.log(error.code);
+          if (error.code === 'auth/email-already-in-use') {
+            this.emitter.emit('showToast', '이미 존재하는 이메일입니다.');
+            this.email = '';
+            return false;
+          }
         });
     },
   },

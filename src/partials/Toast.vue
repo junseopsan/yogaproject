@@ -83,7 +83,7 @@
     class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow toast-center dark:text-gray-400 dark:bg-gray-800"
     role="alert"
   >
-    <div class="text-sm font-normal">{{ msg }}</div>
+    <div class="text-sm font-bold text-red-400" v-html="msg"></div>
     <div class="flex items-center ml-auto space-x-2">
       <button
         type="button"
@@ -147,7 +147,7 @@ export default {
 
       setTimeout(() => {
         this.close();
-      }, 2000);
+      }, 3000);
     },
     confirmClose() {
       this.isShowConfirm = false;

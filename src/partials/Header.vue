@@ -114,7 +114,7 @@
         </nav>
 
         <!-- Mobile menu -->
-        <div class="hidden">
+        <div class="md:hidden">
           <!-- Hamburger button -->
           <button
             ref="hamburger"
@@ -202,19 +202,51 @@
                   </li>
                 </ul>
               </li> -->
+              <template>
+                <li>
+                  <router-link
+                    to="/signin"
+                    class="flex justify-center w-full py-2 font-medium text-purple-600 hover:text-gray-200"
+                    >로그인</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/signup"
+                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-purple-600 border border-transparent rounded-sm hover:bg-purple-700"
+                    >회원가입</router-link
+                  >
+                </li>
+              </template>
+              <template>
+                <li>
+                  <router-link
+                    to="/signin"
+                    class="flex justify-center w-full py-2 font-medium text-blue-600 hover:text-gray-200"
+                    >로그인</router-link
+                  >
+                </li>
+                <li>
+                  <router-link
+                    to="/signup"
+                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-purple-600 border border-transparent rounded-sm hover:bg-purple-700"
+                    >회원가입</router-link
+                  >
+                </li>
+              </template>
               <li>
-                <router-link
-                  to="/signin"
-                  class="flex justify-center w-full py-2 font-medium text-purple-600 hover:text-gray-200"
-                  >로그인</router-link
+                <span
+                  class="flex justify-center w-full py-2 font-medium text-white-600 hover:text-gray-200"
+                  >환영해요, {{ username }}</span
                 >
               </li>
-              <li>
-                <router-link
-                  to="/signup"
-                  class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-purple-600 border border-transparent rounded-sm hover:bg-purple-700"
-                  >회원가입</router-link
+              <li v-if="isLoggedIn">
+                <button
+                  class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                  @click="logout"
                 >
+                  로그아웃
+                </button>
               </li>
             </ul>
           </nav>
@@ -253,7 +285,6 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(11111);
     const auth = getAuth();
 
     document.addEventListener('click', this.clickOutside);
@@ -264,8 +295,8 @@ export default {
       if (user) {
         // User is signed in, see docs for a list of available properties
         this.isLoggedIn = true;
-        const currentUser = auth.currentUser;
-        this.username = currentUser?.displayName;
+        // const currentUser = auth.currentUser;
+        this.username = user?.displayName;
       } else {
         // User is signed out
         this.isLoggedIn = false;

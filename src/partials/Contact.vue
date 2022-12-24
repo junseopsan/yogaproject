@@ -50,7 +50,7 @@
                 name="이메일"
                 class="form-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-400 dark:placeholder-gray-400 dark:text-white"
                 :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
-                placeholder="이름을 입력해주세요."
+                placeholder="이메일을 입력해주세요."
                 rules="required"
               />
               <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>

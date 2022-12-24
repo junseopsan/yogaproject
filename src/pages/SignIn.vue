@@ -13,8 +13,15 @@
             </div>
 
             <!-- Form -->
-            <div class="max-w-sm mx-auto">
-              <!-- <form>
+            <Form
+              v-slot="{ errors, meta }"
+              ref="contact"
+              class="max-w-xl mx-auto"
+              :validation-schema="schema"
+              @click.prevent="false"
+            >
+              <div class="max-w-sm mx-auto">
+                <!-- <form>
                 <div class="flex flex-wrap -mx-3">
                   <div class="w-full px-3">
                     <button
@@ -38,7 +45,7 @@
                   </div>
                 </div>
               </form> -->
-              <!-- <div class="flex items-center my-6">
+                <!-- <div class="flex items-center my-6">
                 <div
                   class="mr-3 border-t border-gray-700 border-dotted grow"
                   aria-hidden="true"
@@ -49,68 +56,82 @@
                   aria-hidden="true"
                 ></div>
               </div> -->
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <label class="block mb-1 text-sm font-medium text-gray-300" for="email"
-                    >Email</label
-                  >
-                  <input
-                    v-model="email"
-                    type="email"
-                    class="w-full text-gray-300 form-input"
-                    placeholder="이메일을 입력해주세요."
-                  />
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="email"
+                      >Email</label
+                    >
+                    <Field
+                      v-model="email"
+                      as="input"
+                      type="email"
+                      name="이메일"
+                      class="w-full text-gray-300 form-input"
+                      :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
+                      placeholder="이메일을 입력해주세요."
+                      rules="required"
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <label
-                    class="block mb-1 text-sm font-medium text-gray-300"
-                    for="password"
-                    >Password</label
-                  >
-                  <input
-                    v-model="password"
-                    type="password"
-                    class="w-full text-gray-300 form-input"
-                    placeholder="비밀번호를 입력해주세요."
-                  />
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="password"
+                      >Password</label
+                    >
+                    <Field
+                      v-model="password"
+                      as="input"
+                      type="password"
+                      name="비밀번호"
+                      class="w-full text-gray-300 form-input"
+                      :class="{ 'border-red-500 focus:border-red-500': errors.비밀번호 }"
+                      placeholder="비밀번호를 입력해주세요."
+                      rules="required"
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{ errors.비밀번호 }}</span>
+                  </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap mb-4 -mx-3">
-                <div class="w-full px-3">
-                  <div class="flex justify-between">
-                    <!-- <label class="flex items-center">
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <div class="flex justify-between">
+                      <!-- <label class="flex items-center">
                         <input type="checkbox" class="form-checkbox" />
                         <span class="ml-2 text-gray-400">Keep me signed in</span>
                       </label> -->
-                    <router-link
-                      to="/reset-password"
-                      class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
-                      >Forgot Password?</router-link
-                    >
+                      <router-link
+                        to="/resetPassword"
+                        class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
+                        >비밀번호를 잊어버리셨나요?</router-link
+                      >
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap mt-6 -mx-3">
-                <div class="w-full px-3">
-                  <button
-                    class="w-full text-white bg-blue-600 btn hover:bg-blue-700"
-                    @click="login"
+                <div class="flex flex-wrap mt-6 -mx-3">
+                  <div class="w-full px-3">
+                    <button
+                      class="w-full text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      :disabled="!meta.valid"
+                      @click="login"
+                    >
+                      로그인
+                    </button>
+                  </div>
+                </div>
+                <div class="mt-6 text-center text-gray-400">
+                  아이디가 없으신가요?
+                  <router-link
+                    to="/signup"
+                    class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
+                    >회원가입</router-link
                   >
-                    로그인
-                  </button>
                 </div>
               </div>
-              <div class="mt-6 text-center text-gray-400">
-                Don’t you have an account?
-                <router-link
-                  to="/signup"
-                  class="text-blue-600 transition duration-150 ease-in-out hover:text-gray-200"
-                  >회원가입</router-link
-                >
-              </div>
-            </div>
+            </Form>
           </div>
         </div>
       </section>
@@ -125,10 +146,29 @@
 import Header from './../partials/Header.vue';
 import Footer from './../partials/Footer.vue';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
+import { required, email } from '@vee-validate/rules';
+import { localize } from '@vee-validate/i18n';
+
+defineRule('required', required);
+defineRule('email', email);
+
+configure({
+  // create and set a localization handler
+  generateMessage: localize('en', {
+    messages: {
+      required: '{field}을 입력해주세요.',
+      email: '{field}을 정확히 입력해주세요.',
+    },
+  }),
+});
 
 export default {
   name: 'SignIn',
   components: {
+    Field,
+    Form,
+    ErrorMessage,
     Header,
     Footer,
   },
@@ -136,6 +176,10 @@ export default {
     return {
       email: '',
       password: '',
+      schema: {
+        이메일: 'required|email',
+        비밀번호: 'required',
+      },
     };
   },
   methods: {

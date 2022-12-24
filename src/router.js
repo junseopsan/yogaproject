@@ -67,7 +67,7 @@ const router = createRouter({
       component: SignUp,
     },
     {
-      path: '/reset-password',
+      path: '/resetPassword',
       component: ResetPassword,
     },
     {
