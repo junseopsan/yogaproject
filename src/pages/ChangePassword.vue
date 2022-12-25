@@ -65,7 +65,7 @@
                 <div class="flex flex-wrap mt-6 -mx-3">
                   <div class="w-full px-3">
                     <button
-                      class="w-full text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                       :disabled="!meta.valid"
                       @click="updateProfile()"
                     >
@@ -74,7 +74,7 @@
                   </div>
                   <div class="w-full px-3">
                     <button
-                      class="w-full mt-3 text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      class="w-full mt-3 text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                       @click="$router.push({ path: '/profile' })"
                     >
                       이전
@@ -96,7 +96,12 @@
 <script>
 import Header from '../partials/Header.vue';
 import Footer from '../partials/Footer.vue';
-import { getAuth, onAuthStateChanged, updatePassword } from 'firebase/auth';
+import {
+  getAuth,
+  onAuthStateChanged,
+  updatePassword,
+  // EmailAuthProvider,
+} from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -133,6 +138,8 @@ export default {
     return {
       password: '',
       newpassword: '',
+      email: '',
+      oldPassword: '',
       schema: {
         비밀번호: 'required|password_valid',
         재입력비밀번호: 'required|password_valid',
@@ -144,6 +151,10 @@ export default {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.isLoggedIn = true;
+        this.email = user.email;
+        this.oldPassword = user.password;
+        console.log(this.email);
+        console.log(this.oldPassword);
       } else {
         this.isLoggedIn = false;
       }
@@ -153,15 +164,18 @@ export default {
     async updateProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
-
+      // const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
+      // const result = await user.reauthenticateWithCredential(
+      //   EmailAuthProvider.getCredential(email: this.email, password: this.oldPassword)
+      // );
       if (this.password !== this.newpassword) {
         this.emitter.emit('showToast', '비밀번호가 일치하지 않습니다.');
       }
-
+      this.emitter.emit('showSpinner', true);
       await updatePassword(user, this.password)
         .then(() => {
+          this.emitter.emit('showSpinner', false);
           this.emitter.emit('showToast', '비밀번호가 변경되었습니다.');
-          // this.$router.push({ path: '/' });
         })
         .catch((error) => {
           console.log(error.code);

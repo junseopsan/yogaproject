@@ -223,11 +223,13 @@ export default {
   },
   methods: {
     async updateProfile() {
+      this.emitter.emit('showSpinner', true);
       await updateProfile(getAuth().currentUser, {
         displayName: this.name,
         photoURL: this.phone,
       })
         .then(() => {
+          this.emitter.emit('showSpinner', false);
           this.emitter.emit('showToast', '개인정보가 변경되었습니다.');
         })
         .catch((error) => {

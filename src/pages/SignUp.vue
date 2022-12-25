@@ -193,27 +193,13 @@ export default {
   },
   mounted() {},
   methods: {
-    // async updatePhoneNumber() {
-    //   await updatePhoneNumber(getAuth().currentUser, {
-    //     phoneNumber: this.phone,
-    //   })
-    //     .then((res) => {
-    //       debugger;
-    //       console.log(res);
-    //       this.$router.push({ path: '/' });
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.code);
-    //     });
-    // },
     async updateProfile() {
-      console.log(this.phone);
       await updateProfile(getAuth().currentUser, {
         displayName: this.name,
-        phoneNumber: this.phone,
+        photoURL: this.phone,
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          this.emitter.emit('showSpinner', false);
           this.$router.push({ path: '/' });
         })
         .catch((error) => {
@@ -221,11 +207,10 @@ export default {
         });
     },
     async signup() {
+      this.emitter.emit('showSpinner', true);
       await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.updateProfile();
-          this.updatePhoneNumber();
         })
         .catch((error) => {
           console.log(error.code);
