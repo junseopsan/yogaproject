@@ -98,7 +98,7 @@
             <li>
               <span
                 to="/signin"
-                class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out font-bolder hover:text-gray-200"
+                class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out cursor-pointer font-bolder hover:text-gray-200"
                 >환영해요, {{ username }}님</span
               >
             </li>

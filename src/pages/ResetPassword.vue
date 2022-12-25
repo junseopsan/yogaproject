@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      email: 'junseopsan@gmail.com',
+      email: '',
     };
   },
   methods: {

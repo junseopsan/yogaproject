@@ -9,6 +9,7 @@ import Contact from './pages/Contact.vue';
 import Help from './pages/Help.vue';
 import SignIn from './pages/SignIn.vue';
 import SignUp from './pages/SignUp.vue';
+import Profile from './pages/Profile.vue';
 import ResetPassword from './pages/ResetPassword.vue';
 import PageNotFound from './pages/PageNotFound.vue';
 
@@ -65,6 +66,10 @@ const router = createRouter({
     {
       path: '/signup',
       component: SignUp,
+    },
+    {
+      path: '/profile',
+      component: Profile,
     },
     {
       path: '/resetPassword',

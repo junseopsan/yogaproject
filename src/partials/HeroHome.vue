@@ -301,6 +301,7 @@ import flatPickr from 'vue-flatpickr-component';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, numeric } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
+import { loadTossPayments } from '@tosspayments/payment-sdk';
 
 defineRule('required', required);
 defineRule('numeric', numeric);
@@ -471,11 +472,19 @@ export default {
     },
   },
   mounted() {
-    // this.getList();
+    this.toss();
   },
   methods: {
     dDate(date) {
       return date < new Date();
+    },
+    toss() {
+      const clientKey = 'test_ck_jZ61JOxRQVEow2lbKpD8W0X9bAqw';
+
+      loadTossPayments(clientKey).then((tossPayments) => {
+        console.log(tossPayments);
+        // ...
+      });
     },
     async goPay() {
       this.emitter.emit('showSpinner', true);

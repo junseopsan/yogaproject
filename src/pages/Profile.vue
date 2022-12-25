@@ -8,7 +8,7 @@
           <div class="pt-32 pb-12 md:pt-40 md:pb-20">
             <!-- Page header -->
             <div class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-              <h1 class="h1">요프에 오신걸 환영해요!</h1>
+              <h1 class="h1">Om Shanti Shanti</h1>
             </div>
 
             <!-- Form -->
@@ -71,14 +71,15 @@
                       as="input"
                       type="email"
                       name="이메일"
-                      class="w-full text-gray-300 form-input"
+                      class="w-full text-gray-300 form-input disabled:opacity-25"
                       :class="{ 'border-red-500 focus:border-red-500': errors.이메일 }"
                       placeholder="이메일을 입력해주세요."
+                      disabled
                     />
                     <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
                   </div>
                 </div>
-                <div class="flex flex-wrap mb-4 -mx-3">
+                <!-- <div class="flex flex-wrap mb-4 -mx-3">
                   <div class="w-full px-3">
                     <label
                       class="block mb-1 text-sm font-medium text-gray-300"
@@ -96,7 +97,7 @@
                     />
                     <span class="mt-2 text-sm text-red-500">{{ errors.비밀번호 }}</span>
                   </div>
-                </div>
+                </div> -->
                 <!-- <div class="text-sm text-center text-gray-500">
                   I agree to be contacted by Open PRO about this offer as per the Open PRO
                   <a
@@ -110,9 +111,9 @@
                     <button
                       class="w-full text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                       :disabled="!meta.valid"
-                      @click="signup()"
+                      @click="updateProfile()"
                     >
-                      회원가입
+                      개인 정보 변경
                     </button>
                   </div>
                 </div>
@@ -129,14 +130,9 @@
 </template>
 
 <script>
-import Header from './../partials/Header.vue';
-import Footer from './../partials/Footer.vue';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  // updatePhoneNumber,
-} from 'firebase/auth';
+import Header from '../partials/Header.vue';
+import Footer from '../partials/Footer.vue';
+import { getAuth, updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -174,7 +170,7 @@ configure({
 });
 
 export default {
-  name: 'SignUp',
+  name: 'Profile',
   components: {
     Header,
     Footer,
@@ -192,25 +188,24 @@ export default {
         이름: 'required',
         전화번호: 'required|numeric|phone_valid',
         이메일: 'required|email',
-        비밀번호: 'required|password_valid',
+        // 비밀번호: 'required|password_valid',
       },
     };
   },
-  mounted() {},
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.isLoggedIn = true;
+        this.name = user?.displayName;
+        this.phone = user?.photoURL;
+        this.email = user?.email;
+      } else {
+        this.isLoggedIn = false;
+      }
+    });
+  },
   methods: {
-    // async updatePhoneNumber() {
-    //   await updatePhoneNumber(getAuth().currentUser, {
-    //     phoneNumber: this.phone,
-    //   })
-    //     .then((res) => {
-    //       debugger;
-    //       console.log(res);
-    //       this.$router.push({ path: '/' });
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.code);
-    //     });
-    // },
     async updateProfile() {
       console.log(this.phone);
       await updateProfile(getAuth().currentUser, {
@@ -223,22 +218,6 @@ export default {
         })
         .catch((error) => {
           console.log(error.code);
-        });
-    },
-    async signup() {
-      await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-        .then((res) => {
-          console.log(res);
-          this.updateProfile();
-          this.updatePhoneNumber();
-        })
-        .catch((error) => {
-          console.log(error.code);
-          if (error.code === 'auth/email-already-in-use') {
-            this.emitter.emit('showToast', '이미 존재하는 이메일입니다.');
-            this.email = '';
-            return false;
-          }
         });
     },
   },
