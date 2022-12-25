@@ -96,10 +96,10 @@
             class="flex flex-wrap items-center justify-end grow"
           >
             <li>
-              <span
-                to="/signin"
+              <router-link
+                to="/profile"
                 class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out cursor-pointer font-bolder hover:text-gray-200"
-                >환영해요, {{ username }}님</span
+                >환영해요, {{ username }}님</router-link
               >
             </li>
             <li v-if="isLoggedIn">
@@ -235,9 +235,10 @@
                 </li>
               </template>
               <li>
-                <span
+                <router-link
+                  to="/profile"
                   class="flex justify-center w-full py-2 font-medium text-white-600 hover:text-gray-200"
-                  >환영해요, {{ username }}</span
+                  >환영해요, {{ username }}</router-link
                 >
               </li>
               <li v-if="isLoggedIn">

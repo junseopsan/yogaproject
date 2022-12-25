@@ -11,6 +11,7 @@ import SignIn from './pages/SignIn.vue';
 import SignUp from './pages/SignUp.vue';
 import Profile from './pages/Profile.vue';
 import ResetPassword from './pages/ResetPassword.vue';
+import ChangePassword from './pages/ChangePassword.vue';
 import PageNotFound from './pages/PageNotFound.vue';
 
 const routerHistory = createWebHistory();
@@ -74,6 +75,10 @@ const router = createRouter({
     {
       path: '/resetPassword',
       component: ResetPassword,
+    },
+    {
+      path: '/changePassword',
+      component: ChangePassword,
     },
     {
       path: '/:pathMatch(.*)*',

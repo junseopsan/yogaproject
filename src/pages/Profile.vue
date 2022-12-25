@@ -109,11 +109,27 @@
                 <div class="flex flex-wrap mt-6 -mx-3">
                   <div class="w-full px-3">
                     <button
-                      class="w-full text-white bg-blue-600 cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                       :disabled="!meta.valid"
                       @click="updateProfile()"
                     >
                       개인 정보 변경
+                    </button>
+                  </div>
+                  <div class="w-full px-3 mt-3">
+                    <button
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      @click="$router.push({ path: '/changePassword' })"
+                    >
+                      비밀번호 변경
+                    </button>
+                  </div>
+                  <div class="w-full px-3 mt-3">
+                    <button
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      @click="$router.push({ path: '/' })"
+                    >
+                      홈으로
                     </button>
                   </div>
                 </div>
@@ -207,14 +223,12 @@ export default {
   },
   methods: {
     async updateProfile() {
-      console.log(this.phone);
       await updateProfile(getAuth().currentUser, {
         displayName: this.name,
         photoURL: this.phone,
       })
-        .then((res) => {
-          console.log(res);
-          this.$router.push({ path: '/' });
+        .then(() => {
+          this.emitter.emit('showToast', '개인정보가 변경되었습니다.');
         })
         .catch((error) => {
           console.log(error.code);

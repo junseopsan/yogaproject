@@ -131,12 +131,7 @@
 <script>
 import Header from './../partials/Header.vue';
 import Footer from './../partials/Footer.vue';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  // updatePhoneNumber,
-} from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -215,7 +210,7 @@ export default {
       console.log(this.phone);
       await updateProfile(getAuth().currentUser, {
         displayName: this.name,
-        photoURL: this.phone,
+        phoneNumber: this.phone,
       })
         .then((res) => {
           console.log(res);
