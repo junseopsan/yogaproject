@@ -96,15 +96,21 @@
             class="flex flex-wrap items-center justify-end grow"
           >
             <li>
-              <router-link
+              <span
                 to="/profile"
-                class="flex items-center px-4 py-3 text-purple-600 transition duration-150 ease-in-out cursor-pointer font-bolder hover:text-gray-200"
-                >환영해요, {{ username }}님</router-link
+                class="flex items-center px-4 py-3 font-bold transition duration-150 ease-in-out text-white-600 hover:text-gray-200"
+                >환영해요, {{ username }}님</span
               >
             </li>
             <li v-if="isLoggedIn">
               <button
-                class="ml-3 text-white bg-purple-600 rounded-sm font-bolder btn-sm hover:bg-blue-700"
+                class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
+                @click="$router.push({ path: '/profile' })"
+              >
+                정보수정
+              </button>
+              <button
+                class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
                 @click="logout"
               >
                 로그아웃
@@ -202,23 +208,7 @@
                   </li>
                 </ul>
               </li> -->
-              <template>
-                <li>
-                  <router-link
-                    to="/signin"
-                    class="flex justify-center w-full py-2 font-medium text-purple-600 hover:text-gray-200"
-                    >로그인</router-link
-                  >
-                </li>
-                <li>
-                  <router-link
-                    to="/signup"
-                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-purple-600 border border-transparent rounded-sm hover:bg-purple-700"
-                    >회원가입</router-link
-                  >
-                </li>
-              </template>
-              <template>
+              <template v-if="!isLoggedIn">
                 <li>
                   <router-link
                     to="/signin"
@@ -234,21 +224,30 @@
                   >
                 </li>
               </template>
-              <li>
-                <router-link
-                  to="/profile"
-                  class="flex justify-center w-full py-2 font-medium text-white-600 hover:text-gray-200"
-                  >환영해요, {{ username }}</router-link
-                >
-              </li>
-              <li v-if="isLoggedIn">
-                <button
-                  class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
-                  @click="logout"
-                >
-                  로그아웃
-                </button>
-              </li>
+              <template v-if="isLoggedIn">
+                <li>
+                  <span
+                    class="flex justify-center w-full py-2 font-bold text-white-600 hover:text-gray-200"
+                    >환영해요, {{ username }}님</span
+                  >
+                </li>
+                <li>
+                  <button
+                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                    @click="$router.push({ path: '/profile' })"
+                  >
+                    정보수정
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                    @click="logout"
+                  >
+                    로그아웃
+                  </button>
+                </li>
+              </template>
             </ul>
           </nav>
         </div>

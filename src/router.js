@@ -13,6 +13,8 @@ import Profile from './pages/Profile.vue';
 import ResetPassword from './pages/ResetPassword.vue';
 import ChangePassword from './pages/ChangePassword.vue';
 import PageNotFound from './pages/PageNotFound.vue';
+import Success from './pages/Success.vue';
+import Fail from './pages/Fail.vue';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const routerHistory = createWebHistory();
@@ -98,6 +100,14 @@ const router = createRouter({
     {
       path: '/help',
       component: Help,
+    },
+    {
+      path: '/success',
+      component: Success,
+    },
+    {
+      path: '/fail',
+      component: Fail,
     },
     {
       path: '/:pathMatch(.*)*',

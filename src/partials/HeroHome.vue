@@ -73,8 +73,8 @@
                       >수업명</label
                     >
                     <input
-                      class="bg-gray-50 disabled:opacity-60 disabled:font-bold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      :value="modalInfo.className + ' : ' + modalInfo.typeName"
+                      class="bg-gray-50 disabled:opacity-60 disabled:font-bold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      :value="modalInfo.title + ' : ' + modalInfo.typeName"
                       :disabled="true"
                     />
                   </div>
@@ -86,16 +86,8 @@
                     >
                     <input
                       v-model="getAmount"
-                      class="bg-gray-50 disabled:font-bold disabled:opacity-60 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      :class="{
-                        'disabled:text-yellow-200 disabled:text-lg disabled:font-extrabold disabled:transform':
-                          selectPeriod === '3개월',
-                        'disabled:text-orange-200 disabled:text-xl disabled:font-extrabold disabled:transform':
-                          selectPeriod === '6개월',
-                        'disabled:text-red-200 disabled:text-2xl disabled:font-extrabold disabled:transform':
-                          selectPeriod === '1 년',
-                      }"
-                      :disabled="true"
+                      class="bg-gray-50 disabled:opacity-60 disabled:font-bold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-900 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      disabled
                     />
                   </div>
                   <Form
@@ -159,8 +151,8 @@
                     </div>
                     <div
                       v-if="
-                        modalInfo.className === 'Together 요가프로젝트' ||
-                        (modalInfo.className === 'Wonderful 요가프로젝트' &&
+                        modalInfo.title === 'Together 요가프로젝트' ||
+                        (modalInfo.title === 'Wonderful 요가프로젝트' &&
                           modalInfo.typeName === '지도자과정')
                       "
                     >
@@ -184,7 +176,7 @@
                       <label
                         for="password"
                         class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
-                        >수련 시작일{{ modalInfo.className }}</label
+                        >수련 시작일</label
                       >
                       <div
                         class="relative"
@@ -243,21 +235,17 @@
                         for="password"
                         class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
                         >결제 방법
-                        <span v-if="selectPayMethod === '계좌이체'"
-                          >(신한은행 612-06-510843 요가프로젝트)</span
-                        >
                       </label>
                       <select
                         v-model="selectPayMethod"
                         class="w-full font-bold text-gray-300 rounded-md form-select"
                       >
-                        <option>계좌이체</option>
-                        <!-- <option>카드</option> -->
+                        <option>무통장입금</option>
+                        <option>카드</option>
                       </select>
                     </div>
                     <div>
                       <label
-                        for="password"
                         class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
                         >하고싶은말</label
                       >
@@ -270,13 +258,22 @@
                         placeholder="하고싶은말을 입력해주세요."
                       />
                     </div>
+                    <div>
+                      <label
+                        class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
+                        >환불 정책</label
+                      >
+                      <div class="text-sm font-bold text-red-500">
+                        1주전 100% / 1일전 90% / 시작후 환불 불가
+                      </div>
+                    </div>
                     <button
                       type="submit"
                       class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-xl px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-25 mt-8"
                       :disabled="!meta.valid"
                       @click="goPay"
                     >
-                      신청하기
+                      결제하기
                     </button>
                   </Form>
                 </div>
@@ -302,6 +299,7 @@ import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, numeric } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
+import { v4 as uuidv4 } from 'uuid';
 
 defineRule('required', required);
 defineRule('numeric', numeric);
@@ -343,17 +341,18 @@ export default {
         이름: 'required',
         전화번호: 'required|numeric|phone_valid',
       },
+      sucessPayInfo: {
+        amount: '0',
+        orderId: '0',
+        paymentKey: '0',
+      },
       selectPeriod: '1개월',
       selectPlace: '오프라인',
-      selectPayMethod: '계좌이체',
-      lessonCnt: '1회',
+      selectPayMethod: '무통장입금',
       period: 1,
       discountName: '',
-      dicountPercent: 0,
-      className: '',
       selectedAmount: 0,
       amount: '',
-      inputAmount: '',
       modalOpen: false,
       list: [],
       formatter: { date: 'YYYY-MM-DD', month: 'MM' },
@@ -365,7 +364,7 @@ export default {
       },
       startDate: moment().format('YYYY-MM-DD'),
       modalInfo: {
-        className: '',
+        title: '',
         typeName: '',
         amount: 0,
       },
@@ -394,56 +393,64 @@ export default {
   },
   computed: {
     getAmount() {
-      let getAmount = this.inputAmount;
+      let amount = this.modalInfo.amount;
       let discount = 0;
       let discountName = '';
+      let discountMonth = 1;
+      let discountPercent = 0.9;
 
-      if (this.modalInfo.typeName === '개인레슨') {
-        this.lessonCnt === '1회' ? (getAmount = 110000) : (getAmount = 777000);
-      }
+      const selectPayMethod = this.selectPayMethod;
+      const selectPeriod = this.selectPeriod;
+      const selectPlace = this.selectPlace;
 
-      if (this.selectPeriod === '1개월' && this.selectPlace === '온라인') {
-        discount = 20;
-        getAmount = getAmount * 0.8;
-      }
-
-      if (this.selectPeriod === '3개월') {
-        if (this.selectPlace === '오프라인') {
+      switch (selectPeriod) {
+        case '1개월':
+          discount = 0;
+          discountMonth = 1;
+          discountPercent = 1;
+          break;
+        case '3개월':
           discount = 10;
-          getAmount = getAmount * 3 * 0.9;
-        } else {
-          discount = 30;
-          getAmount = getAmount * 3 * 0.7;
-        }
-      } else if (this.selectPeriod === '6개월') {
-        if (this.selectPlace === '오프라인') {
+          discountMonth = 3;
+          discountPercent = 0.9;
+          break;
+        case '6개월':
           discount = 20;
-          getAmount = getAmount * 6 * 0.8;
-        } else {
-          discount = 40;
-          getAmount = getAmount * 6 * 0.6;
-        }
-      } else if (this.selectPeriod === '1 년') {
-        if (this.selectPlace === '오프라인') {
+          discountMonth = 6;
+          discountPercent = 0.8;
+          break;
+        case '1 년':
           discount = 30;
-          getAmount = getAmount * 12 * 0.7;
-        } else {
-          discount = 50;
-          getAmount = getAmount * 12 * 0.5;
-        }
+          discountMonth = 12;
+          discountPercent = 0.7;
+          break;
       }
-      if (this.selectPeriod !== '1개월' || this.selectPlace === '온라인') {
-        console.log(this.selectPlace);
-        console.log(this.selectPeriod);
-        discountName = discount + '% 할인';
+
+      if (selectPlace === '온라인') {
+        discount = discount + 10;
+        discountPercent = discountPercent - 0.1;
+      }
+
+      if (selectPayMethod === '카드') {
+        discount = discount - 10;
+        discountPercent = discountPercent + 0.1;
+      }
+
+      if (discount < 0) {
+        amount = amount * discountMonth * 1.1;
+        discountName = `(10% 부과)`;
+      } else if (discount === 0) {
+        amount = amount * discountMonth;
+        discountName = '';
+      } else {
+        amount = amount * discountMonth * discountPercent;
+        discountName = selectPeriod === '1개월' ? '' : `(${discount}% 할인)`;
       }
 
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.dicountPercent = discount;
-      // 결제할때 쓰이도록 하기 위해서
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.selectedAmount = this.selectPlace === '오프라인' ? getAmount : getAmount * 0.8;
-      return getAmount.toLocaleString() + ' 원 ' + discountName;
+      this.selectedAmount = amount;
+
+      return amount.toLocaleString() + ' 원 ' + discountName;
     },
     endDate() {
       let period = 0;
@@ -472,62 +479,61 @@ export default {
     },
   },
   mounted() {
-    this.toss();
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.remove('scrollLock');
   },
   methods: {
     dDate(date) {
       return date < new Date();
     },
-    toss() {
+    async toss() {
       const clientKey = 'test_ck_jZ61JOxRQVEow2lbKpD8W0X9bAqw';
+      const uuid = uuidv4();
 
-      loadTossPayments(clientKey).then((tossPayments) => {
-        console.log(tossPayments);
-        // ...
+      await loadTossPayments(clientKey).then((tossPayments) => {
+        tossPayments
+          .requestPayment('카드', {
+            amount: this.selectedAmount,
+            orderId: uuid,
+            orderName: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
+            customerName: this.guestInfo.name,
+            successUrl: 'https://www.yogaproject.kr/success',
+            failUrl: 'https://www.yogaproject.kr/fail',
+            // successUrl: 'http://127.0.0.1:5173/success',
+            // failUrl: 'http://127.0.0.1:5173/fail',
+          })
+          .catch(function (error) {
+            this.emitter.emit('showSpinner', false);
+            if (error.code === 'USER_CANCEL') {
+              // 결제 고객이 결제창을 닫았을 때 에러 처리
+              this.emitter.emit('showToast', '결제가 취소되었습니다.');
+              return false;
+            } else if (error.code === 'INVALID_CARD_COMPANY') {
+              // 유효하지 않은 카드 코드에 대한 에러 처리
+              this.emitter.emit('showToast', '유효하지 않은 카드입니다.');
+              return false;
+            }
+          });
       });
+      this.emitter.emit('showSpinner', false);
     },
     async goPay() {
       this.emitter.emit('showSpinner', true);
-      await axios
-        .get(
-          `https://script.google.com/macros/s/AKfycbzHTEYacVvh_4tMZ11yadKcDqoAIzySK8HAdiIulBz2Twy3TO6y4wlYFXfX2ngc0O7Fmg/exec`,
-          {
-            params: {
-              신청일: moment().format('YYYY-MM-DD'),
-              이름: this.guestInfo.name,
-              전화번호: this.guestInfo.phoneNumber,
-              수업이름: this.modalInfo.className + ' : ' + this.modalInfo.typeName,
-              수련장소: this.selectPlace,
-              수련기간: this.selectPeriod,
-              수련시작일: this.startDate,
-              수련종료일: this.endDate,
-              하고싶은말: this.guestInfo.somethingText,
-              할인: this.dicountPercent !== 0 ? this.dicountPercent + '% 할인' : '',
-              수련금액: this.selectedAmount,
-              결제방법: this.selectPayMethod,
-            },
-          }
-        )
-        .then((res) => {
-          const result = res.data.result;
-
-          if (result === 'success') {
-            this.emitter.emit('showSpinner', false);
-            this.emitter.emit('showToast', '수업이 신청되었습니다.');
-            this.close();
-          }
-        });
+      localStorage.setItem('amount', this.selectedAmount);
+      if (this.selectPayMethod === '카드') {
+        this.toss();
+      } else if (this.selectPayMethod === '무통장입금') {
+        this.$router.push({ path: '/success', query: { type: 'cash' } });
+      }
     },
     payModalOpen(value) {
       const modalInfo = this.modalInfo;
-      modalInfo.className = value.className;
+      modalInfo.title = value.title;
       modalInfo.typeName = value.typeName;
-      modalInfo.amount = value.amount;
-      this.inputAmount = value.amount;
-
-      // if (modalInfo.typeName === '1 회') this.selectPeriod = '1 회';
+      modalInfo.amount = Number(value.amount);
 
       this.modalOpen = true;
+
       const body = document.getElementsByTagName('body')[0];
       body.classList.add('scrollLock');
     },

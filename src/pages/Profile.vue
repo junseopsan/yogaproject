@@ -11,6 +11,73 @@
               <h1 class="h1">Om Shanti Shanti</h1>
             </div>
 
+            <Modal id="modal" :show="modalOpen">
+              <div class="relative w-full h-full max-w-md mx-auto my-0 md:h-auto">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                  <button
+                    type="button"
+                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                    data-modal-toggle="authentication-modal"
+                    @click="close()"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                  </button>
+                  <div class="px-6 py-6 space-y-3 lg:px-8">
+                    <Form
+                      v-slot="{ errors, meta }"
+                      ref="form"
+                      class="max-w-xl mx-auto space-y-3"
+                      :validation-schema="passwordSchema"
+                      @click.prevent="false"
+                    >
+                      <div>
+                        <label
+                          for="password"
+                          class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
+                          >이전 비밀번호</label
+                        >
+                        <Field
+                          v-model="oldPassword"
+                          as="input"
+                          type="password"
+                          name="이전비밀번호"
+                          class="w-full text-gray-300 form-input"
+                          :class="{
+                            'border-red-500 focus:border-red-500': errors.이전비밀번호,
+                          }"
+                          placeholder="이전 비밀번호를 입력해주세요."
+                        />
+                        <span class="mt-2 text-sm text-red-500">{{
+                          errors.이전비밀번호
+                        }}</span>
+                      </div>
+                      <button
+                        type="submit"
+                        class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-xl px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-25 mt-8"
+                        :disabled="!meta.valid"
+                        @click="deleteMember"
+                      >
+                        탈퇴하기
+                      </button>
+                    </Form>
+                  </div>
+                </div>
+              </div>
+            </Modal>
             <!-- Form -->
             <Form
               v-slot="{ errors, meta }"
@@ -79,33 +146,6 @@
                     <span class="mt-2 text-sm text-red-500">{{ errors.이메일 }}</span>
                   </div>
                 </div>
-                <!-- <div class="flex flex-wrap mb-4 -mx-3">
-                  <div class="w-full px-3">
-                    <label
-                      class="block mb-1 text-sm font-medium text-gray-300"
-                      for="password"
-                      >비밀번호<span class="text-red-600">*</span></label
-                    >
-                    <Field
-                      v-model="password"
-                      as="input"
-                      type="password"
-                      name="비밀번호"
-                      class="w-full text-gray-300 form-input"
-                      :class="{ 'border-red-500 focus:border-red-500': errors.비밀번호 }"
-                      placeholder="비밀번호를 입력해주세요."
-                    />
-                    <span class="mt-2 text-sm text-red-500">{{ errors.비밀번호 }}</span>
-                  </div>
-                </div> -->
-                <!-- <div class="text-sm text-center text-gray-500">
-                  I agree to be contacted by Open PRO about this offer as per the Open PRO
-                  <a
-                    class="text-gray-400 underline transition duration-150 ease-in-out hover:text-gray-200 hover:no-underline"
-                    href="#0"
-                    >Privacy Policy</a
-                  >.
-                </div> -->
                 <div class="flex flex-wrap mt-6 -mx-3">
                   <div class="w-full px-3">
                     <button
@@ -125,6 +165,14 @@
                     </button>
                   </div>
                   <div class="w-full px-3 mt-3">
+                    <button
+                      class="w-full text-white bg-red-600 rounded-md cursor-pointer btn hover:bg-red-700 disabled:opacity-25"
+                      @click="modalOpen = true"
+                    >
+                      회원 탈퇴
+                    </button>
+                  </div>
+                  <div class="w-full px-3 mt-5">
                     <button
                       class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
                       @click="$router.push({ path: '/' })"
@@ -146,9 +194,17 @@
 </template>
 
 <script>
+import Modal from '../utils/Modal.vue';
 import Header from '../partials/Header.vue';
 import Footer from '../partials/Footer.vue';
-import { getAuth, updateProfile, onAuthStateChanged } from 'firebase/auth';
+import {
+  getAuth,
+  updateProfile,
+  onAuthStateChanged,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -188,6 +244,7 @@ configure({
 export default {
   name: 'Profile',
   components: {
+    Modal,
     Header,
     Footer,
     Field,
@@ -196,15 +253,18 @@ export default {
   },
   data() {
     return {
+      modalOpen: false,
       name: '',
       phone: '',
       email: '',
-      password: '',
+      oldPassword: '',
       schema: {
         이름: 'required',
         전화번호: 'required|numeric|phone_valid',
         이메일: 'required|email',
-        // 비밀번호: 'required|password_valid',
+      },
+      passwordSchema: {
+        이전비밀번호: 'required|password_valid',
       },
     };
   },
@@ -222,6 +282,9 @@ export default {
     });
   },
   methods: {
+    close() {
+      this.modalOpen = false;
+    },
     async updateProfile() {
       this.emitter.emit('showSpinner', true);
       await updateProfile(getAuth().currentUser, {
@@ -230,10 +293,43 @@ export default {
       })
         .then(() => {
           this.emitter.emit('showSpinner', false);
-          this.emitter.emit('showToast', '개인정보가 변경되었습니다.');
+          this.emitter.emit('showToast', '개인 정보가 변경되었습니다.');
         })
         .catch((error) => {
+          this.emitter.emit('showSpinner', false);
           console.log(error.code);
+        });
+    },
+    async deleteMember() {
+      this.emitter.emit('showSpinner', true);
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
+      await reauthenticateWithCredential(user, credential)
+        .then(() => {
+          console.log('re-authenticated.');
+
+          deleteUser(user)
+            .then(() => {
+              this.emitter.emit('showSpinner', false);
+              this.emitter.emit('showToast', '요프에서 떠났습니다.');
+              setTimeout(() => {
+                this.$router.push({ path: '/' });
+              }, 1500);
+            })
+            .catch((error) => {
+              this.emitter.emit('showSpinner', false);
+              console.log(error.code);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          this.emitter.emit('showSpinner', false);
+          if (errorCode === 'auth/wrong-password') {
+            this.emitter.emit('showToast', '이전 비밀번호를 다시 입력해주세요.');
+            return false;
+          }
         });
     },
   },

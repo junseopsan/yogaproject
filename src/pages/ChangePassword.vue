@@ -10,7 +10,6 @@
             <div class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
               <h1 class="h1">Namaste</h1>
             </div>
-
             <!-- Form -->
             <Form
               v-slot="{ errors, meta }"
@@ -19,6 +18,31 @@
               :validation-schema="schema"
               @click.prevent="false"
             >
+              <div class="max-w-sm mx-auto">
+                <div class="flex flex-wrap mb-4 -mx-3">
+                  <div class="w-full px-3">
+                    <label
+                      class="block mb-1 text-sm font-medium text-gray-300"
+                      for="password"
+                      >이전 비밀번호<span class="text-red-600">*</span></label
+                    >
+                    <Field
+                      v-model="oldPassword"
+                      as="input"
+                      type="password"
+                      name="이전비밀번호"
+                      class="w-full text-gray-300 form-input"
+                      :class="{
+                        'border-red-500 focus:border-red-500': errors.이전비밀번호,
+                      }"
+                      placeholder="이전 비밀번호를 입력해주세요."
+                    />
+                    <span class="mt-2 text-sm text-red-500">{{
+                      errors.이전비밀번호
+                    }}</span>
+                  </div>
+                </div>
+              </div>
               <div class="max-w-sm mx-auto">
                 <div class="flex flex-wrap mb-4 -mx-3">
                   <div class="w-full px-3">
@@ -69,7 +93,7 @@
                       :disabled="!meta.valid"
                       @click="updateProfile()"
                     >
-                      비밀번호 변경
+                      변경
                     </button>
                   </div>
                   <div class="w-full px-3">
@@ -100,7 +124,8 @@ import {
   getAuth,
   onAuthStateChanged,
   updatePassword,
-  // EmailAuthProvider,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required } from '@vee-validate/rules';
@@ -141,6 +166,7 @@ export default {
       email: '',
       oldPassword: '',
       schema: {
+        이전비밀번호: 'required|password_valid',
         비밀번호: 'required|password_valid',
         재입력비밀번호: 'required|password_valid',
       },
@@ -152,9 +178,6 @@ export default {
       if (user) {
         this.isLoggedIn = true;
         this.email = user.email;
-        this.oldPassword = user.password;
-        console.log(this.email);
-        console.log(this.oldPassword);
       } else {
         this.isLoggedIn = false;
       }
@@ -164,21 +187,36 @@ export default {
     async updateProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
-      // const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
-      // const result = await user.reauthenticateWithCredential(
-      //   EmailAuthProvider.getCredential(email: this.email, password: this.oldPassword)
-      // );
       if (this.password !== this.newpassword) {
         this.emitter.emit('showToast', '비밀번호가 일치하지 않습니다.');
+        return false;
       }
       this.emitter.emit('showSpinner', true);
-      await updatePassword(user, this.password)
+
+      const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
+      await reauthenticateWithCredential(user, credential)
         .then(() => {
-          this.emitter.emit('showSpinner', false);
-          this.emitter.emit('showToast', '비밀번호가 변경되었습니다.');
+          console.log('re-authenticated.');
+          updatePassword(user, this.password)
+            .then(() => {
+              this.emitter.emit('showSpinner', false);
+              this.emitter.emit('showToast', '비밀번호가 변경되었습니다.');
+              setTimeout(() => {
+                this.$router.push({ path: '/profile' });
+              }, 1500);
+            })
+            .catch((error) => {
+              this.emitter.emit('showSpinner', false);
+              console.log(error.code);
+            });
         })
         .catch((error) => {
-          console.log(error.code);
+          const errorCode = error.code;
+          this.emitter.emit('showSpinner', false);
+          if (errorCode === 'auth/wrong-password') {
+            this.emitter.emit('showToast', '이전 비밀번호를 다시 입력해주세요.');
+            return false;
+          }
         });
     },
   },
