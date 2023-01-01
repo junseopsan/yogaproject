@@ -15,6 +15,7 @@ import ChangePassword from './pages/ChangePassword.vue';
 import PageNotFound from './pages/PageNotFound.vue';
 import Success from './pages/Success.vue';
 import Fail from './pages/Fail.vue';
+import Admin from './pages/Admin.vue';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const routerHistory = createWebHistory();
@@ -104,10 +105,23 @@ const router = createRouter({
     {
       path: '/success',
       component: Success,
+      meta: {
+        requiresAuth: false,
+      },
     },
     {
       path: '/fail',
       component: Fail,
+      meta: {
+        requiresAuth: false,
+      },
+    },
+    {
+      path: '/admin',
+      component: Admin,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/:pathMatch(.*)*',

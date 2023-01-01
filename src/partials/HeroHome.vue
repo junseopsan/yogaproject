@@ -9,11 +9,7 @@
           data-aos-delay="100"
           data-aos="fade-up"
         >
-          <h1 class="mb-4 text-center h1">
-            " 행복하세요.<br />
-            밝게 지내요. <br />
-            있는 그대로의 자신이 되세요. "
-          </h1>
+          <h1 class="mb-4 text-center h1" v-html="mainTitle"></h1>
         </div>
         <Process />
         <!-- Hero image -->
@@ -300,6 +296,8 @@ import { required, numeric } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './../main';
 
 defineRule('required', required);
 defineRule('numeric', numeric);
@@ -356,7 +354,7 @@ export default {
       modalOpen: false,
       list: [],
       formatter: { date: 'YYYY-MM-DD', month: 'MM' },
-      mainText: '',
+      mainTitle: '" 행복하세요.<br />밝게 지내요. <br />있는 그대로의 자신이 되세요. ',
       guestInfo: {
         name: '',
         phoneNumber: '',
@@ -436,19 +434,23 @@ export default {
         discountPercent = discountPercent + 0.1;
       }
 
+      if (discount === 0) {
+        amount = amount * discountMonth;
+        discountName = '';
+      }
+
       if (discount < 0) {
         amount = amount * discountMonth * 1.1;
         discountName = `(10% 부과)`;
-      } else if (discount === 0) {
-        amount = amount * discountMonth;
-        discountName = '';
-      } else {
+      }
+
+      if (discount > 0) {
         amount = amount * discountMonth * discountPercent;
-        discountName = selectPeriod === '1개월' ? '' : `(${discount}% 할인)`;
+        discountName = `(${discount}% 할인)`;
       }
 
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.selectedAmount = amount;
+      this.selectedAmount = Math.floor(amount);
 
       return amount.toLocaleString() + ' 원 ' + discountName;
     },
@@ -481,44 +483,47 @@ export default {
   mounted() {
     const body = document.getElementsByTagName('body')[0];
     body.classList.remove('scrollLock');
+    this.getMainTitle();
   },
   methods: {
-    dDate(date) {
-      return date < new Date();
+    // endDate(date) {
+    //   return date < new Date();
+    // },
+    async getMainTitle() {
+      const querySnapshot = await getDocs(collection(db, 'yogaproject'));
+      querySnapshot.forEach((doc) => {
+        this.mainTitle = doc.data().mainTitle;
+      });
     },
     async toss() {
       const clientKey = 'test_ck_jZ61JOxRQVEow2lbKpD8W0X9bAqw';
       const uuid = uuidv4();
-
-      await loadTossPayments(clientKey).then((tossPayments) => {
-        tossPayments
-          .requestPayment('카드', {
-            amount: this.selectedAmount,
-            orderId: uuid,
-            orderName: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
-            customerName: this.guestInfo.name,
-            successUrl: 'https://www.yogaproject.kr/success',
-            failUrl: 'https://www.yogaproject.kr/fail',
-            // successUrl: 'http://127.0.0.1:5173/success',
-            // failUrl: 'http://127.0.0.1:5173/fail',
-          })
-          .catch(function (error) {
-            this.emitter.emit('showSpinner', false);
-            if (error.code === 'USER_CANCEL') {
-              // 결제 고객이 결제창을 닫았을 때 에러 처리
-              this.emitter.emit('showToast', '결제가 취소되었습니다.');
+      this.emitter.emit('showSpinner', true);
+      await loadTossPayments(clientKey)
+        .then((tossPayments) => {
+          tossPayments
+            .requestPayment('카드', {
+              amount: this.selectedAmount,
+              orderId: uuid,
+              orderName: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
+              customerName: this.guestInfo.name,
+              successUrl: 'https://www.yogaproject.kr/success',
+              failUrl: 'https://www.yogaproject.kr/fail',
+              // successUrl: 'http://127.0.0.1:5173/success',
+              // failUrl: 'http://127.0.0.1:5173/fail',
+            })
+            .catch((error) => {
+              this.emitter.emit('showToast', error.message);
               return false;
-            } else if (error.code === 'INVALID_CARD_COMPANY') {
-              // 유효하지 않은 카드 코드에 대한 에러 처리
-              this.emitter.emit('showToast', '유효하지 않은 카드입니다.');
-              return false;
-            }
-          });
-      });
+            });
+        })
+        .catch((error) => {
+          this.emitter.emit('showToast', error.message);
+          return false;
+        });
       this.emitter.emit('showSpinner', false);
     },
     async goPay() {
-      this.emitter.emit('showSpinner', true);
       localStorage.setItem('amount', this.selectedAmount);
       if (this.selectPayMethod === '카드') {
         this.toss();

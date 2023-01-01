@@ -139,13 +139,13 @@ export default {
       events: null,
       value: true,
       videoModalOpen: false,
-      selectGeneralOption: '주 1회',
-      selectGeneralAmount: 97000,
-      selectTargetOption: '생애 첫요가',
-      selectTargetAmount: 39000,
+      selectGeneralOption: '',
+      selectGeneralAmount: 0,
+      selectTargetOption: '',
+      selectTargetAmount: 0,
       selectTargetPeriod: '',
-      selectPeakOption: '지도자과정',
-      selectPeakAmount: 390000,
+      selectPeakOption: '',
+      selectPeakAmount: 0,
       selectPeakInfo: '',
       generalOptionList: [
         {
@@ -236,6 +236,16 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    this.selectGeneralOption = this.generalOptionList[0].name;
+    this.selectGeneralAmount = this.generalOptionList[0].amount;
+
+    this.selectTargetOption = this.targetOptionList[0].name;
+    this.selectTargetAmount = this.targetOptionList[0].amount;
+
+    this.selectPeakOption = this.peakOptionList[0].name;
+    this.selectPeakAmount = this.peakOptionList[0].amount;
   },
   methods: {
     changeSelect(key) {

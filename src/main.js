@@ -4,8 +4,6 @@ import App from './App.vue';
 import PrimeVue from 'primevue/config';
 import base from './scripts/base';
 import { initializeApp } from 'firebase/app';
-// import FirebasePlugin from 'vca-firebase';
-// import firebaseConfig from '../firebase.config.js';
 
 import './css/additional-styles/flatpickr.css';
 import 'flatpickr/dist/themes/dark.css';
@@ -13,6 +11,7 @@ import 'aos/dist/aos.css';
 import './css/style.css';
 import mitt from 'mitt';
 import VueMobileDetection from 'vue-mobile-detection';
+import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -28,16 +27,16 @@ const firebaseConfig = {
   measurementId: 'G-BEFCHDMQG8',
 };
 const emitter = mitt();
-initializeApp(firebaseConfig);
+
+const fireApp = initializeApp(firebaseConfig);
+export const db = getFirestore(fireApp);
 
 const app = createApp(App);
 
 app.use(PrimeVue);
 app.use(VueMobileDetection);
-// app.use(FirebasePlugin, firebaseConfig);
 
 app.mixin(base);
-
 app.use(router);
 app.config.globalProperties.emitter = emitter;
 

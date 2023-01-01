@@ -104,6 +104,13 @@
             </li>
             <li v-if="isLoggedIn">
               <button
+                v-if="email === 'sinsayogaproject@gmail.com'"
+                class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
+                @click="$router.push({ path: '/admin' })"
+              >
+                관리자
+              </button>
+              <button
                 class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
                 @click="$router.push({ path: '/profile' })"
               >
@@ -154,60 +161,6 @@
             ]"
           >
             <ul class="px-4 py-2 bg-gray-800">
-              <!-- <li>
-                <router-link
-                  to="/features"
-                  class="flex py-2 text-gray-300 hover:text-gray-200"
-                  >Features</router-link
-                >
-              </li>
-              <li>
-                <router-link
-                  to="/pricing"
-                  class="flex py-2 text-gray-300 hover:text-gray-200"
-                  >Pricing</router-link
-                >
-              </li>
-              <li>
-                <router-link
-                  to="/blog"
-                  class="flex py-2 text-gray-300 hover:text-gray-200"
-                  >Blog</router-link
-                >
-              </li>
-              <li>
-                <router-link
-                  to="/about"
-                  class="flex py-2 text-gray-300 hover:text-gray-200"
-                  >About us</router-link
-                >
-              </li>
-              <li class="py-2 my-2 border-t border-b border-gray-700">
-                <span class="flex py-2 text-gray-300">Support</span>
-                <ul class="pl-4">
-                  <li>
-                    <router-link
-                      to="/contact"
-                      class="flex py-2 text-sm font-medium text-gray-400 hover:text-gray-200"
-                      >Contact us</router-link
-                    >
-                  </li>
-                  <li>
-                    <router-link
-                      to="/help"
-                      class="flex py-2 text-sm font-medium text-gray-400 hover:text-gray-200"
-                      >Help center</router-link
-                    >
-                  </li>
-                  <li>
-                    <router-link
-                      to="/404"
-                      class="flex py-2 text-sm font-medium text-gray-400 hover:text-gray-200"
-                      >404</router-link
-                    >
-                  </li>
-                </ul>
-              </li> -->
               <template v-if="!isLoggedIn">
                 <li>
                   <router-link
@@ -230,6 +183,15 @@
                     class="flex justify-center w-full py-2 font-bold text-white-600 hover:text-gray-200"
                     >환영해요, {{ username }}님</span
                   >
+                </li>
+                <li>
+                  <button
+                    v-if="email === 'sinsayogaproject@gmail.com'"
+                    class="inline-flex items-center justify-center w-full px-4 py-2 my-2 font-medium text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                    @click="$router.push({ path: '/admin' })"
+                  >
+                    관리자
+                  </button>
                 </li>
                 <li>
                   <button
@@ -275,6 +237,7 @@ export default {
     return {
       mobileNavOpen: false,
       username: '',
+      email: '',
       isLoggedIn: false,
     };
   },
@@ -297,6 +260,7 @@ export default {
         this.isLoggedIn = true;
         // const currentUser = auth.currentUser;
         this.username = user?.displayName;
+        this.email = user?.email;
       } else {
         // User is signed out
         this.isLoggedIn = false;

@@ -31,12 +31,8 @@
               ></path>
             </svg>
 
-            <h4 class="mb-2 h4">월화수목금토일 낮 2시 30분</h4>
-            <p class="text-lg text-center text-gray-400">
-              상황에 따라서 차담, 다식 등의 시간<br />
-              완벽할 순 없어도, 때론 온전하지 않아도<br />
-              최선의 노력과 만족은 있기를
-            </p>
+            <h4 class="mb-2 h4" v-html="dayTime"></h4>
+            <p class="text-lg text-center text-gray-400" v-html="dayDescription"></p>
           </div>
 
           <!-- 2nd item -->
@@ -66,11 +62,8 @@
                 d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
               ></path>
             </svg>
-            <h4 class="mb-2 h4">월화수목금 밤 7시 30분</h4>
-            <p class="text-lg text-center text-gray-400">
-              요프의 시간은 칼처럼 시작하거나<br />
-              끝나지 않으니, 이점 참고하셔서
-            </p>
+            <h4 class="mb-2 h4" v-html="nightTime"></h4>
+            <p class="text-lg text-center text-gray-400" v-html="nightDescription"></p>
           </div>
 
           <!-- 3rd item -->
@@ -89,11 +82,8 @@
                 d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
               ></path>
             </svg>
-            <h4 class="mb-2 h4">온라인 동시진행</h4>
-            <p class="text-lg text-center text-gray-400">
-              모든 수업은 온라인요가 (Zoom)<br />
-              동시진행
-            </p>
+            <h4 class="mb-2 h4" v-html="onlineTime"></h4>
+            <p class="text-lg text-center text-gray-400" v-html="onlineDescription"></p>
           </div>
         </div>
       </div>
@@ -102,7 +92,39 @@
 </template>
 
 <script>
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './../main';
+
 export default {
   name: 'Process',
+  data() {
+    return {
+      dayTime: '월화수목금토일 낮 2시 30분',
+      dayDescription:
+        '상황에 따라서 차담, 다식 등의 시간<br />완벽할 순 없어도, 때론 온전하지 않아도<br />최선의 노력과 만족은 있기를',
+      nightTime: '월화수목금 밤 7시 30분',
+      nightDescription:
+        '요프의 시간은 칼처럼 시작하거나<br />끝나지 않으니, 이점 참고하셔서',
+      onlineTime: '온라인 동시진행',
+      onlineDescription: '모든 수업은 온라인요가 (Zoom)<br />동시진행',
+    };
+  },
+  mounted() {
+    this.getCommonText();
+  },
+  methods: {
+    async getCommonText() {
+      const querySnapshot = await getDocs(collection(db, 'yogaproject'));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        this.dayTime = data.dayTime;
+        this.dayDescription = data.dayDescription;
+        this.nightTime = data.nightTime;
+        this.nightDescription = data.nightDescription;
+        this.onlineTime = data.onlineTime;
+        this.onlineDescription = data.onlineDescription;
+      });
+    },
+  },
 };
 </script>
