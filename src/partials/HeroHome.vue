@@ -11,6 +11,27 @@
         >
           <h1 class="mb-4 text-center h1" v-html="mainTitle"></h1>
         </div>
+        <div class="max-w-5xl pb-6 mx-auto text-center md:pb-12">
+          <section class="text-white bg-gray-900">
+            <div class="max-w-screen-xl px-4 py-4 mx-auto sm:px-6 lg:px-8">
+              <div
+                class="grid content-center gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3"
+                data-aos-delay="100"
+                data-aos="fade-up"
+              >
+                <template v-for="(item, key) in noticeList" :key="key">
+                  <div
+                    v-if="item.isDisplay === 'Yes'"
+                    class="self-center block p-8 transition border border-gray-800 shadow-xl justify-self-center rounded-xl hover:border-blue-500/10 hover:shadow-blue-500/10"
+                  >
+                    <h2 class="font-bold text-white text-md" v-html="item.title"></h2>
+                    <p class="mt-1 text-sm text-gray-300" v-html="item.content"></p>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+        </div>
         <Process />
         <!-- Hero image -->
         <div>
@@ -22,17 +43,13 @@
             <PricingTables @open="(value) => payModalOpen(value)" />
           </div>
           <div class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-            <h2 class="mb-4 h2" data-aos="fade-up">수련 방식</h2>
+            <h2 class="mb-4 h2" data-aos="fade-up" v-html="classTitle"></h2>
             <p
               class="text-xl font-semibold text-gray-400"
               data-aos="fade-up"
               data-aos-delay="200"
-            >
-              요즘 요프는 몸과 마음의 이완으로 시작하여, 각성으로 진입하고 다시 이완으로
-              종료됩니다. <br />
-              이완과 각성은 총체적으로 보는게 좋지 않을까 싶어요.<br />
-              각자의 상황과 큰 상황 전체를 연결하는 수련을 합시다.
-            </p>
+              v-html="classDescription"
+            ></p>
           </div>
 
           <!-- Modal -->
@@ -344,6 +361,7 @@ export default {
         orderId: '0',
         paymentKey: '0',
       },
+      noticeList: [],
       selectPeriod: '1개월',
       selectPlace: '오프라인',
       selectPayMethod: '무통장입금',
@@ -354,7 +372,10 @@ export default {
       modalOpen: false,
       list: [],
       formatter: { date: 'YYYY-MM-DD', month: 'MM' },
-      mainTitle: '" 행복하세요.<br />밝게 지내요. <br />있는 그대로의 자신이 되세요. ',
+      mainTitle: '" 행복하세요.<br />밝게 지내요. <br />있는 그대로의 자신이 되세요. "',
+      classTitle: '수련 방식',
+      classDescription:
+        '요즘 요프는 몸과 마음의 이완으로 시작하여, 각성으로 진입하고 다시 이완으로 종료됩니다. <br />이완과 각성은 총체적으로 보는게 좋지 않을까 싶어요.<br />각자의 상황과 큰 상황 전체를 연결하는 수련을 합시다.',
       guestInfo: {
         name: '',
         phoneNumber: '',
@@ -484,15 +505,30 @@ export default {
     const body = document.getElementsByTagName('body')[0];
     body.classList.remove('scrollLock');
     this.getMainTitle();
+    this.getNotice();
   },
   methods: {
-    // endDate(date) {
-    //   return date < new Date();
-    // },
+    async getNotice() {
+      const querySnapshot = await getDocs(collection(db, 'notice'));
+      const list = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        list.push({
+          number: data.number,
+          title: data.title,
+          content: data.content,
+          isDisplay: data.isDisplay,
+        });
+      });
+
+      this.noticeList = list.sort((a, b) => a.number - b.number);
+    },
     async getMainTitle() {
       const querySnapshot = await getDocs(collection(db, 'yogaproject'));
       querySnapshot.forEach((doc) => {
         this.mainTitle = doc.data().mainTitle;
+        this.classTitle = doc.data().classTitle;
+        this.classDescription = doc.data().classDescription;
       });
     },
     async toss() {

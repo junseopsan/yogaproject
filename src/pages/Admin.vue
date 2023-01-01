@@ -8,10 +8,10 @@
       <section class="relative">
         <div class="max-w-6xl px-4 mx-auto sm:px-6">
           <div class="pt-32 pb-12 md:pt-40 md:pb-20">
-            <div class="max-w-3xl mx-auto">
+            <div class="max-w-4xl mx-auto">
               <ul class="flex border-b border-gray-100">
                 <li
-                  v-for="(item, key) in ['시간표', '수업']"
+                  v-for="(item, key) in ['시간표', '공지사항']"
                   :key="key"
                   class="flex-1 cursor-pointer"
                   @click="type = item"
@@ -187,6 +187,50 @@
                           errors.온라인설명
                         }}</span>
                       </div>
+                      <div class="w-full px-3 mt-3">
+                        <label
+                          class="block mb-1 text-sm font-medium text-gray-300"
+                          for="full-name"
+                          >수련 방식 제목<span class="text-red-600">*</span></label
+                        >
+                        <Field
+                          v-model="classTitle"
+                          as="input"
+                          name="수련방식제목"
+                          type="text"
+                          class="w-full text-gray-300 form-input"
+                          :class="{
+                            'border-red-500 focus:border-red-500': errors.수련방식제목,
+                          }"
+                          placeholder="수련 방식 제목을 입력해주세요."
+                          rules="required"
+                        />
+                        <span class="mt-2 text-sm text-red-500">{{
+                          errors.수련방식제목
+                        }}</span>
+                      </div>
+                      <div class="w-full px-3 mt-3">
+                        <label
+                          class="block mb-1 text-sm font-medium text-gray-300"
+                          for="full-name"
+                          >수련 방식 설명 <span class="text-red-600">*</span></label
+                        >
+                        <Field
+                          v-model="classDescription"
+                          as="input"
+                          name="수련방식설명"
+                          type="text"
+                          class="w-full text-gray-300 form-input"
+                          :class="{
+                            'border-red-500 focus:border-red-500': errors.수련방식설명,
+                          }"
+                          placeholder="수련 방식 설명을 입력해주세요."
+                          rules="required"
+                        />
+                        <span class="mt-2 text-sm text-red-500">{{
+                          errors.수련방식설명
+                        }}</span>
+                      </div>
                     </div>
                     <div class="flex flex-wrap mt-6 -mx-3">
                       <div class="w-full px-3">
@@ -210,7 +254,19 @@
                   </div>
                 </Form>
               </div>
-              <div v-else-if="type === '수업'">aaaa</div>
+              <div v-else-if="type === '공지사항'">
+                <NoticeAdmin />
+                <div class="flex flex-wrap justify-center mt-6 -mx-3">
+                  <div class="px-3 mt-5 w-[220px]">
+                    <button
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      @click="$router.push({ path: '/' })"
+                    >
+                      홈으로
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -225,6 +281,7 @@
 <script>
 import Header from '../partials/Header.vue';
 import Footer from '../partials/Footer.vue';
+import NoticeAdmin from '../partials/NoticeAdmin.vue';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -245,6 +302,7 @@ export default {
   components: {
     Header,
     Footer,
+    NoticeAdmin,
     Field,
     Form,
     ErrorMessage,
@@ -261,6 +319,9 @@ export default {
         '요프의 시간은 칼처럼 시작하거나<br />끝나지 않으니, 이점 참고하셔서',
       onlineTime: '온라인 동시진행',
       onlineDescription: '모든 수업은 온라인요가 (Zoom)<br />동시진행',
+      classTitle: '수련 방식',
+      classDescription:
+        '요즘 요프는 몸과 마음의 이완으로 시작하여, 각성으로 진입하고 다시 이완으로 종료됩니다. <br />이완과 각성은 총체적으로 보는게 좋지 않을까 싶어요.<br />각자의 상황과 큰 상황 전체를 연결하는 수련을 합시다.',
       schema: {
         메인제목: 'required',
         낮시간: 'required',
@@ -280,30 +341,36 @@ export default {
       const querySnapshot = await getDocs(collection(db, 'yogaproject'));
       querySnapshot.forEach((doc) => {
         const data = doc.data();
+        this.mainTitle = data.mainTitle;
         this.dayTime = data.dayTime;
         this.dayDescription = data.dayDescription;
         this.nightTime = data.nightTime;
         this.nightDescription = data.nightDescription;
         this.onlineTime = data.onlineTime;
         this.onlineDescription = data.onlineDescription;
+        this.classTitle = data.classTitle;
+        this.classDescription = data.classDescription;
       });
     },
     updateCommon() {
       const docRef = doc(db, 'yogaproject', 'common');
 
       const data = {
+        mainTitle: this.mainTitle,
         dayTime: this.dayTime,
         dayDescription: this.dayDescription,
         nightTime: this.nightTime,
         nightDescription: this.nightDescription,
         onlineTime: this.onlineTime,
         onlineDescription: this.onlineDescription,
+        classTitle: this.classTitle,
+        classDescription: this.classDescription,
       };
 
       setDoc(docRef, data)
         .then((result) => {
           console.log('result', result);
-          console.log('Success! Word object written to database.');
+          console.log('Success!!');
           this.emitter.emit('showToast', '성공적으로 변경되었습니다.');
           this.getCommonText();
         })
