@@ -11,7 +11,7 @@
             <div class="max-w-4xl mx-auto">
               <ul class="flex border-b border-gray-100">
                 <li
-                  v-for="(item, key) in ['공통', '공지사항']"
+                  v-for="(item, key) in ['공통', '공지사항', '수업']"
                   :key="key"
                   class="flex-1 cursor-pointer"
                   @click="type = item"
@@ -46,6 +46,19 @@
                   </div>
                 </div>
               </div>
+              <div v-else-if="type === '수업'">
+                <ClassAdmin />
+                <div class="flex flex-wrap justify-center mt-6 -mx-3">
+                  <div class="px-3 mt-5 w-[220px]">
+                    <button
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      @click="$router.push({ path: '/' })"
+                    >
+                      홈으로
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -61,6 +74,7 @@
 import Header from '../partials/Header.vue';
 import Footer from '../partials/Footer.vue';
 import NoticeAdmin from '../partials/NoticeAdmin.vue';
+import ClassAdmin from '../partials/ClassAdmin.vue';
 import CommonSetting from '../partials/CommonSetting.vue';
 
 export default {
@@ -69,6 +83,7 @@ export default {
     Header,
     Footer,
     NoticeAdmin,
+    ClassAdmin,
     CommonSetting,
   },
   data() {

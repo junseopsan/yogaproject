@@ -164,9 +164,8 @@
                     </div>
                     <div
                       v-if="
-                        modalInfo.title === 'Together 요가프로젝트' ||
-                        (modalInfo.title === 'Wonderful 요가프로젝트' &&
-                          modalInfo.typeName === '지도자과정')
+                        modalInfo.type === 'general' ||
+                        (modalInfo.type === 'peak' && modalInfo.typeName === '지도자과정')
                       "
                     >
                       <label
@@ -384,6 +383,7 @@ export default {
       },
       startDate: moment().format('YYYY-MM-DD'),
       modalInfo: {
+        type: '',
         title: '',
         typeName: '',
         amount: 0,
@@ -570,6 +570,7 @@ export default {
     },
     payModalOpen(value) {
       const modalInfo = this.modalInfo;
+      modalInfo.type = value.type;
       modalInfo.title = value.title;
       modalInfo.typeName = value.typeName;
       modalInfo.amount = Number(value.amount);

@@ -130,6 +130,9 @@
 </template>
 
 <script>
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../main';
+
 export default {
   name: 'PricingTables',
   components: {},
@@ -149,45 +152,55 @@ export default {
       selectPeakInfo: '',
       generalOptionList: [
         {
+          type: 'general',
           name: '주 1회',
           amount: 97000,
         },
         {
+          type: 'general',
           name: '주 2회',
           amount: 157000,
         },
         {
+          type: 'general',
           name: '주 3회',
           amount: 207000,
         },
         {
+          type: 'general',
           name: '주 4회',
           amount: 247000,
         },
         {
+          type: 'general',
           name: '주 5회',
           amount: 277000,
         },
         {
+          type: 'general',
           name: '자유 한달',
           amount: 307000,
         },
       ],
       targetOptionList: [
         {
+          type: 'target',
           name: '생애 첫요가',
           amount: 27000,
         },
         {
+          type: 'target',
           name: '일회성 수련',
           amount: 37000,
         },
         {
+          type: 'target',
           name: '다섯번 쿠폰',
           amount: 157000,
           period: '기간 3달',
         },
         {
+          type: 'target',
           name: '열번의 쿠폰',
           amount: 247000,
           period: '기간 5달',
@@ -195,16 +208,19 @@ export default {
       ],
       peakOptionList: [
         {
+          type: 'peak',
           name: '지도자과정',
           amount: 370000,
           info: '월 4회 기준 / (매주 토요일 밤 7 ~ 11) <br />3개월 10% / 6개월 20% / 1년 30%',
         },
         {
+          type: 'peak',
           name: '개인레슨 1회',
           amount: 110000,
           info: '1:1 기반 / 연인, 친구 등 소그룹 가능',
         },
         {
+          type: 'peak',
           name: '개인레슨 8회',
           amount: 770000,
           info: '기간 3달 / 1:1 기반 / 연인, 친구 등 소그룹 가능',
@@ -216,23 +232,23 @@ export default {
           title: 'Together 요가프로젝트',
           classSubName: '통합, 역동적, 정적, 매일, 자유, 안정',
           description:
-            '<p>가장 통상적인 그룹요가로,<br/> 매일 다른 요가프로젝트만의 역동적, 양적, 정적인 요가입니다.</p><br/><p>하타요가를 뿌리로 하며, 음악과 함께, 그날 함께 하시는 분들의 총체적 상황에 따라 난이도가 결정됩니다.</p><br/><p>남녀노소 누구나 참여하실 수 있으며, 초,중,상급의 옵션이 제시되며, 개인적 상황에 따라 조절을 하셔도 됩니다.</p><br/><p>주1회 수련부터 매일 낮밤으로 신청하실 수 있으며, 시작과 요일을 자유롭게 하실 수 있습니다.</p>',
+            '가장 통상적인 그룹요가로,<br/> 매일 다른 요가프로젝트만의 역동적, 양적, <br/>정적인 요가입니다.<br/><br/>하타요가를 뿌리로 하며, 음악과 함께, 그날 함께 하시는 분들의 총체적 상황에 따라 난이도가 결정됩니다.<br/><br/>남녀노소 누구나 참여하실 수 있으며,<br/> 초,중,상급의 옵션이 제시되며, 개인적 상황에<br/> 따라 조절을 하셔도 됩니다.<br/><br/>주1회 수련부터 매일 낮밤으로<br/> 신청하실 수 있으며, 시작과 요일을 자유롭게<br/> 하실 수 있습니다.',
         },
         {
           type: 'target',
           title: 'Welcome 요가프로젝트',
           classSubName: '경험, 체험, 열린마음, 용기, 도전',
           description:
-            '<p>한번 체험을 해보고 싶으시거나, 규칙적인 수련이 어려우신 분들을 위한 쿠폰요가 입니다.</p><br/><p>1회 쿠폰, 10회 쿠폰이 있으며, 요가가 처음이더라도, 자신의 하던 수련 방식이 있더라도, 세상은 넓고 할일은 많으며 요가프로젝트는 매일 변화하고 있습니다.</p><br/><p>마음을 열고, 몸의 어느 쪽이든 요가프로젝트와 함께 자주 또는 때때로 열어가셨으면 좋겠습니다.</p>',
+            '한번 체험을 해보고 싶으시거나, 규칙적인 수련이 어려우신 분들을 위한 쿠폰요가 입니다.<br/><br/>1회 쿠폰, 10회 쿠폰이 있으며,<br/> 요가가 처음이더라도, 자신의 하던 수련 방식이 있더라도, 세상은 넓고 할일은 많으며 <br/>요가프로젝트는 매일 변화하고 있습니다.<br/><br/>마음을 열고, 몸의 어느 쪽이든 요가프로젝트와 함께 자주 또는 때때로 열어가셨으면 좋겠습니다.',
         },
         {
           type: 'peak',
           title: 'Wonderful 요가프로젝트',
           classSubName: '상처, 회복, 성장, 개인적, 목적성',
           description:
-            '<p>개인레슨은 프라이빗한 수련을 원하시거나, 개인적 목적성으로 몸과 마음의 어느 부분을 창조, 유지, 파괴를 위해 고안되며 진행하고 있습니다.</p><p>1:1로 진행하거나 가족, 친구, 연인이 함께 하는 소그룹 수련으로 함께 하실 수도 있습니다.</p><p>개인의 목적성과 원하시는 방향에 따라 지도 강사가 배정되며 기간 제한은 없으며 강사와 신청자의 스케줄을 조율, 조절을 하셔서 일정한 시간에 진행됩니다.</p><br/><p>1회도 좋지만 8회를 추천드리며, 8회를 1개월 기준으로 3개월부터 할인이 적용됩니다.</p>',
+            '개인레슨은 프라이빗한 수련을 원하시거나,<br/> 개인적 목적성으로 몸과 마음의 어느 부분을<br/> 창조, 유지, 파괴를 위해 고안되며<br/> 진행하고 있습니다.<br/><br/>1:1로 진행하거나 가족, 친구, 연인이 함께 하는 소그룹 수련으로 함께 하실 수도 있습니다.<br/>개인의 목적성과 원하시는 방향에 따라<br/> 지도 강사가 배정되며 기간 제한은 없으며 강사와 신청자의 스케줄을 조율, 조절을 하셔서 일정한 시간에 진행됩니다.<br/><br/>1회도 좋지만 8회를 추천드리며, 8회를 1개월<br/> 기준으로 3개월부터 할인이 적용됩니다.',
           teacherDescription:
-            '<p>요가프로젝트만의 특별한 과정으로 대표 강사 G1의 14년간의 상처부터 회복에서 성장까지 개인적 수련을 그대로 담아서 진행되고 있습니다.</p><br/><p>매주 토요일 밤 7시부터 11시까지 진행되고 있으며, 요가 지도자의 육체 수련 방식과 요가의 이론을 그날의 교재로 함께 읽고, 의견을 나누며 주어진 시간동안 진행됩니다.</p><br/><p>강사 자격증은 요가프로젝트 자체발급으로 꾸준하게 10개월 이상 임하신 분들께 지급되고 있으며, 1달 또는 1회 신청도 가능합니다.</p>',
+            '요가프로젝트만의 특별한 과정으로 대표 강사<br/> G1의 14년간의 상처부터 회복에서 성장까지<br/> 개인적 수련을 그대로 담아서 진행되고 있습니다.<br/><br/>매주 토요일 밤 7시부터 11시까지 진행되고<br/> 있으며, 요가 지도자의 육체 수련 방식과 요가의 이론을 그날의 교재로 함께 읽고, 의견을 나누며 주어진 시간동안 진행됩니다.<br/><br/>강사 자격증은 요가프로젝트 자체발급으로<br/> 꾸준하게 10개월 이상 임하신 분들께<br/> 지급되고 있으며, 1달 또는 1회 신청도<br/> 가능합니다.',
         },
       ],
     };
@@ -246,6 +262,9 @@ export default {
 
     this.selectPeakOption = this.peakOptionList[0].name;
     this.selectPeakAmount = this.peakOptionList[0].amount;
+  },
+  mounted() {
+    this.getClass();
   },
   methods: {
     changeSelect(key) {
@@ -271,7 +290,12 @@ export default {
           typeName = this.selectPeakOption;
           break;
       }
-      this.$emit('open', { title: title, typeName: typeName, amount: amount });
+      this.$emit('open', {
+        type: type,
+        title: title,
+        typeName: typeName,
+        amount: amount,
+      });
     },
     getAmount(type) {
       const selectGeneralOption = this.selectGeneralOption;
@@ -303,6 +327,23 @@ export default {
         this.selectPeakAmount = selectPeakAmount.amount;
         return this.selectPeakAmount;
       }
+    },
+    async getClass() {
+      const querySnapshot = await getDocs(collection(db, 'class'));
+      const list = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        list.push({
+          number: data.number,
+          type: data.type,
+          title: data.title,
+          classSubName: data.classSubName,
+          description: data.description,
+          teacherDescription: data.teacherDescription,
+        });
+      });
+
+      this.classList = list.sort((a, b) => a.number - b.number);
     },
   },
 };
