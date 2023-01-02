@@ -327,17 +327,19 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
-import { required } from '@vee-validate/rules';
+import { required, numeric } from '@vee-validate/rules';
 import { db } from '../main';
 import { localize } from '@vee-validate/i18n';
 import { v4 as uuidv4 } from 'uuid';
 
 defineRule('required', required);
+defineRule('numeric', numeric);
 configure({
   // create and set a localization handler
   generateMessage: localize('en', {
     messages: {
-      required: '{field}을 입력해주세요.',
+      required: '{field}을/를 입력해주세요.',
+      numeric: '{field}은/는 숫자만 입력할 수 있습니다.',
     },
   }),
 });
@@ -369,9 +371,9 @@ export default {
       },
       schema: {
         타입: 'required',
-        순서: 'required',
+        순서: 'required|numeric',
         옵션명: 'required',
-        옵션가격: 'required',
+        옵션가격: 'required|numeric',
         노출여부: 'required',
       },
     };
@@ -386,13 +388,13 @@ export default {
       if (name === 'add') {
         this.isAdd = true;
         this.$refs.form.resetForm();
-        this.optionInfo.number = 0;
-        this.optionInfo.name = '';
         this.optionInfo.amount = 0;
-        this.optionInfo.docId = '';
+        this.optionInfo.number = 0;
+        this.optionInfo.name = '-';
 
         setTimeout(() => {
           if (this.selectOption !== 'general') this.optionInfo.info = '-';
+
           this.optionInfo.type = this.selectOption;
           this.optionInfo.isDisplay = 'Yes';
         }, 100);
@@ -426,6 +428,7 @@ export default {
         amount: Number(optionInfo.amount),
         isDisplay: optionInfo.isDisplay,
       };
+
       if (this.selectOption !== 'general') {
         if (this.optionInfo.info === '') {
           this.emitter.emit('showToast', '정보를 입력해주세요.');

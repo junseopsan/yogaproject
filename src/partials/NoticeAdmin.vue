@@ -245,16 +245,18 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
-import { required } from '@vee-validate/rules';
+import { required, numeric } from '@vee-validate/rules';
 import { db } from './../main';
 import { localize } from '@vee-validate/i18n';
 import { v4 as uuidv4 } from 'uuid';
 defineRule('required', required);
+defineRule('numeric', numeric);
 configure({
   // create and set a localization handler
   generateMessage: localize('en', {
     messages: {
-      required: '{field}을 입력해주세요.',
+      required: '{field}을/를 입력해주세요.',
+      numeric: '{field}은/는 숫자만 입력할 수 있습니다.',
     },
   }),
 });
@@ -281,7 +283,7 @@ export default {
         isDisplay: 'Yes',
       },
       schema: {
-        순서: 'required',
+        순서: 'required|numeric',
         제목: 'required',
         내용: 'required',
         노출여부: 'required',

@@ -333,7 +333,7 @@ configure({
   // create and set a localization handler
   generateMessage: localize('en', {
     messages: {
-      required: '{field}을 입력해주세요.',
+      required: '{field}을/를 입력해주세요.',
       numeric: '{field}은 숫자만 입력할 수 있습니다.',
     },
   }),
