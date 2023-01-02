@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen overflow-hidden">
-    <Header :is-show-user="false" />
+    <Header />
     <!-- Page content -->
     <main class="grow">
       <section class="relative">

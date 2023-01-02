@@ -95,7 +95,7 @@
                     >
                     <Field
                       v-model="updateInfo.content"
-                      as="input"
+                      as="textarea"
                       name="내용"
                       class="w-full text-gray-300 form-input"
                       :class="{

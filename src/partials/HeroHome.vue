@@ -308,6 +308,7 @@ import GoodDatePicker from './../partials/GoodDatePicker.vue';
 import moment from 'moment';
 import flatPickr from 'vue-flatpickr-component';
 
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, numeric } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
@@ -572,6 +573,14 @@ export default {
       modalInfo.title = value.title;
       modalInfo.typeName = value.typeName;
       modalInfo.amount = Number(value.amount);
+
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.guestInfo.name = user?.displayName;
+          this.guestInfo.phoneNumber = user?.photoURL;
+        }
+      });
 
       this.modalOpen = true;
 
