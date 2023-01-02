@@ -1,20 +1,21 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  define: {
-    'process.env': process.env,
-  },
-  plugins: [vue()],
-  resolve: {
-    alias: [
-      {
-        find: /^~.+/,
-        replacement: (val) => {
-          return val.replace(/^~/, '');
+export default (mode) =>
+  defineConfig({
+    define: {
+      'process.env': loadEnv(mode, process.cwd(), ''),
+    },
+    plugins: [vue()],
+    resolve: {
+      alias: [
+        {
+          find: /^~.+/,
+          replacement: (val) => {
+            return val.replace(/^~/, '');
+          },
         },
-      },
-    ],
-  },
-});
+      ],
+    },
+  });

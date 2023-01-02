@@ -533,7 +533,7 @@ export default {
       });
     },
     async toss() {
-      const clientKey = 'test_ck_jZ61JOxRQVEow2lbKpD8W0X9bAqw';
+      const clientKey = process.env.VITE_TOSS_CLIENT_KEY;
       const uuid = uuidv4();
       this.emitter.emit('showSpinner', true);
       await loadTossPayments(clientKey)
