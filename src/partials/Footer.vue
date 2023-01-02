@@ -28,7 +28,13 @@
             <!-- 2nd block -->
             <div class="text-sm">
               <ul>
-                <li class="mb-1"></li>
+                <li class="mb-1">
+                  <a
+                    href="/#notice"
+                    class="text-gray-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-100"
+                    >공지사항</a
+                  >
+                </li>
                 <li class="mb-1">
                   <a
                     href="/#hero"

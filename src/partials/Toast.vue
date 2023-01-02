@@ -40,7 +40,7 @@
       </svg>
       <span class="sr-only">Close modal</span>
     </button>
-    <div class="p-6 text-center">
+    <div class="w-full p-6 text-center">
       <svg
         aria-hidden="true"
         class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
@@ -62,7 +62,7 @@
       <button
         data-modal-toggle="popup-modal"
         type="button"
-        class="text-white bg-yellow-600 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+        class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
         @click="confirm"
       >
         예

@@ -12,7 +12,7 @@
           <h1 class="mb-4 text-center h1" v-html="mainTitle"></h1>
         </div>
         <div class="max-w-5xl pb-6 mx-auto text-center md:pb-12">
-          <section class="text-white bg-gray-900">
+          <section id="notice" class="text-white bg-gray-900">
             <div class="max-w-screen-xl px-4 py-4 mx-auto sm:px-6 lg:px-8">
               <div
                 class="grid content-center gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3"

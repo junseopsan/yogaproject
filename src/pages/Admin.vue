@@ -8,10 +8,10 @@
       <section class="relative">
         <div class="max-w-6xl px-4 mx-auto sm:px-6">
           <div class="pt-32 pb-12 md:pt-40 md:pb-20">
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-5xl mx-auto">
               <ul class="flex border-b border-gray-100">
                 <li
-                  v-for="(item, key) in ['공통', '공지사항', '수업']"
+                  v-for="(item, key) in ['공통', '공지사항', '수업', '옵션']"
                   :key="key"
                   class="flex-1 cursor-pointer"
                   @click="type = item"
@@ -59,6 +59,19 @@
                   </div>
                 </div>
               </div>
+              <div v-else-if="type === '옵션'">
+                <OptionAdmin />
+                <div class="flex flex-wrap justify-center mt-6 -mx-3">
+                  <div class="px-3 mt-5 w-[220px]">
+                    <button
+                      class="w-full text-white bg-blue-600 rounded-md cursor-pointer btn hover:bg-blue-700 disabled:opacity-25"
+                      @click="$router.push({ path: '/' })"
+                    >
+                      홈으로
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -76,6 +89,7 @@ import Footer from '../partials/Footer.vue';
 import NoticeAdmin from '../partials/NoticeAdmin.vue';
 import ClassAdmin from '../partials/ClassAdmin.vue';
 import CommonSetting from '../partials/CommonSetting.vue';
+import OptionAdmin from '../partials/OptionAdmin.vue';
 
 export default {
   name: 'Admin',
@@ -85,6 +99,7 @@ export default {
     NoticeAdmin,
     ClassAdmin,
     CommonSetting,
+    OptionAdmin,
   },
   data() {
     return {

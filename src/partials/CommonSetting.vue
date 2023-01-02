@@ -53,7 +53,7 @@
             as="textarea"
             name="낮설명"
             type="text"
-            class="w-full text-gray-300 form-input"
+            class="w-full text-gray-300 form-input h-[120px]"
             :class="{
               'border-red-500 focus:border-red-500': errors.낮설명,
             }"
@@ -89,7 +89,7 @@
             as="textarea"
             name="밤설명"
             type="text"
-            class="w-full text-gray-300 form-input"
+            class="w-full text-gray-300 form-input h-[120px]"
             :class="{
               'border-red-500 focus:border-red-500': errors.밤설명,
             }"
@@ -161,7 +161,7 @@
             as="textarea"
             name="수련방식설명"
             type="text"
-            class="w-full text-gray-300 form-input"
+            class="w-full text-gray-300 form-input h-[120px]"
             :class="{
               'border-red-500 focus:border-red-500': errors.수련방식설명,
             }"
@@ -282,9 +282,7 @@ export default {
       };
 
       setDoc(docRef, data)
-        .then((result) => {
-          console.log('result', result);
-          console.log('Success!!');
+        .then(() => {
           this.emitter.emit('showToast', '성공적으로 변경되었습니다.');
           this.getCommonText();
         })

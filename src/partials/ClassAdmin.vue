@@ -108,7 +108,7 @@
                       v-model="classInfo.description"
                       as="textarea"
                       name="설명"
-                      class="w-full text-gray-300 form-input"
+                      class="w-full text-gray-300 form-input h-[150px]"
                       :class="{
                         'border-red-500 focus:border-red-500': errors.설명,
                       }"
@@ -153,19 +153,21 @@
               <th
                 class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
               >
-                <div class="flex items-center gap-2">타입</div>
+                <div class="text-center">타입</div>
               </th>
               <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">제목</div>
+                <div class="text-center">제목</div>
+              </th>
+              <th
+                class="w-[70px] px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">부제목</div>
               </th>
               <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">부제목</div>
+                <div class="text-center">설명</div>
               </th>
               <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">설명</div>
-              </th>
-              <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">부가설명</div>
+                <div class="text-center">부가설명</div>
               </th>
 
               <th
@@ -186,20 +188,20 @@
                 {{ item.type }}
               </td>
               <td
-                class="w-[10px] px-4 py-2 text-gray-700 whitespace-pre-line dark:bg-white"
+                class="w-[40px] px-4 py-2 text-gray-700 whitespace-pre-line dark:bg-white"
               >
                 {{ item.title }}
               </td>
-              <td class="w-[20px] px-4 py-2 text-gray-700 break-all dark:bg-white">
+              <td class="w-[70px] px-4 py-2 text-gray-700 break-all dark:bg-white">
                 {{ item.classSubName }}
               </td>
               <td
-                class="px-4 py-2 text-center text-gray-700 whitespace-pre-line dark:bg-white"
+                class="w-[150px] px-4 py-2 text-center text-gray-700 whitespace-pre-line dark:bg-white"
               >
                 {{ item.description }}
               </td>
               <td
-                class="px-4 py-2 text-center text-gray-700 whitespace-pre-line dark:bg-white"
+                class="w-[120px] px-4 py-2 text-center text-gray-700 whitespace-pre-line dark:bg-white"
               >
                 {{ item.teacherDescription }}
               </td>
@@ -281,7 +283,6 @@ export default {
       const q = query(classCollection, where('title', '==', title));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((result) => {
-        // console.log(result.id, ' => ', result.data());
         const data = result.data();
         const classInfo = this.classInfo;
 
@@ -308,9 +309,7 @@ export default {
           teacherDescription: classInfo.teacherDescription,
         };
         setDoc(docRef, data)
-          .then((result) => {
-            console.log('result', result);
-            console.log('Success!!');
+          .then(() => {
             this.emitter.emit('showToast', '성공적으로 변경되었습니다.');
             this.modalOpen = false;
             this.getClass();

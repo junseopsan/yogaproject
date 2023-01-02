@@ -27,8 +27,13 @@
                     <span class="text-base font-medium text-body-color">
                       <template v-if="item.type === 'general'">
                         <div>
-                          <span class="pr-4 text-3xl font-bold"
-                            >{{ getAmount('general').toLocaleString() }}원
+                          <span
+                            class="pr-4 font-bold"
+                            :class="{
+                              'text-2xl': Number(selectGeneralAmount) > 999999,
+                              'text-3xl': Number(selectGeneralAmount) < 999999,
+                            }"
+                            >{{ getAmount('general') }}원
                           </span>
                           <select
                             id="country"
@@ -37,17 +42,17 @@
                             @change="changeSelect(key)"
                           >
                             <option
-                              v-for="(item, index) in generalOptionList"
+                              v-for="(general, index) in generalOptionList"
                               :key="index"
                             >
-                              {{ item.name }}
+                              {{ general.name }}
                             </option>
                           </select>
                         </div>
                       </template>
                       <div v-if="item.type === 'target'">
                         <span class="pr-4 text-3xl font-bold"
-                          >{{ getAmount('target').toLocaleString() }}원</span
+                          >{{ getAmount('target') }}원</span
                         >
                         <select
                           id="country"
@@ -55,14 +60,17 @@
                           class="font-bold text-gray-300 rounded-md w-2/1 form-select"
                           @change="changeSelect(key)"
                         >
-                          <option v-for="(item, index) in targetOptionList" :key="index">
-                            {{ item.name }}
+                          <option
+                            v-for="(target, index) in targetOptionList"
+                            :key="index"
+                          >
+                            {{ target.name }}
                           </option>
                         </select>
                       </div>
                       <div v-if="item.type === 'peak'">
                         <span class="pr-4 text-3xl font-bold"
-                          >{{ getAmount('peak').toLocaleString() }}원</span
+                          >{{ getAmount('peak') }}원</span
                         >
                         <select
                           id="country"
@@ -70,8 +78,8 @@
                           class="font-bold text-gray-300 rounded-md w-2/1 form-select"
                           @change="changeSelect(key)"
                         >
-                          <option v-for="(item, index) in peakOptionList" :key="index">
-                            {{ item.name }}
+                          <option v-for="(peak, index) in peakOptionList" :key="index">
+                            {{ peak.name }}
                           </option>
                         </select>
                       </div>
@@ -91,7 +99,7 @@
                       v-if="item.type === 'target'"
                       class="mt-2 mb-2 font-bold text-red-500"
                     >
-                      {{ selectTargetPeriod }}
+                      {{ selectTargetInfo }}
                     </div>
                     <div
                       v-if="item.type === 'peak'"
@@ -146,7 +154,7 @@ export default {
       selectGeneralAmount: 0,
       selectTargetOption: '',
       selectTargetAmount: 0,
-      selectTargetPeriod: '',
+      selectTargetInfo: '',
       selectPeakOption: '',
       selectPeakAmount: 0,
       selectPeakInfo: '',
@@ -197,13 +205,13 @@ export default {
           type: 'target',
           name: '다섯번 쿠폰',
           amount: 157000,
-          period: '기간 3달',
+          info: '기간 3달',
         },
         {
           type: 'target',
           name: '열번의 쿠폰',
           amount: 247000,
-          period: '기간 5달',
+          info: '기간 5달',
         },
       ],
       peakOptionList: [
@@ -254,14 +262,7 @@ export default {
     };
   },
   created() {
-    this.selectGeneralOption = this.generalOptionList[0].name;
-    this.selectGeneralAmount = this.generalOptionList[0].amount;
-
-    this.selectTargetOption = this.targetOptionList[0].name;
-    this.selectTargetAmount = this.targetOptionList[0].amount;
-
-    this.selectPeakOption = this.peakOptionList[0].name;
-    this.selectPeakAmount = this.peakOptionList[0].amount;
+    this.getOptions();
   },
   mounted() {
     this.getClass();
@@ -306,28 +307,71 @@ export default {
         const selectGeneralAmount = this.generalOptionList.find(
           (item) => item.name === selectGeneralOption
         );
-        this.selectGeneralAmount = selectGeneralAmount.amount;
-        return this.selectGeneralAmount;
+        this.selectGeneralAmount = selectGeneralAmount?.amount;
+        return this.selectGeneralAmount?.toLocaleString();
       }
 
       if (type === 'target') {
         const selectTargetAmount = this.targetOptionList.find(
           (item) => item.name === selectTargetOption
         );
-        this.selectTargetPeriod = selectTargetAmount.period;
-        this.selectTargetAmount = selectTargetAmount.amount;
-        return this.selectTargetAmount;
+
+        this.selectTargetInfo = selectTargetAmount?.info.replace('-', '');
+        this.selectTargetAmount = selectTargetAmount?.amount;
+        return this.selectTargetAmount?.toLocaleString();
       }
 
       if (type === 'peak') {
         const selectPeakAmount = this.peakOptionList.find(
           (item) => item.name === selectPeakOption
         );
-        this.selectPeakInfo = selectPeakAmount.info;
-        this.selectPeakAmount = selectPeakAmount.amount;
-        return this.selectPeakAmount;
+        this.selectPeakInfo = selectPeakAmount?.info;
+        this.selectPeakAmount = selectPeakAmount?.amount;
+        return this.selectPeakAmount?.toLocaleString();
       }
     },
+    async getOptions() {
+      const querySnapshot = await getDocs(collection(db, 'option'));
+      const list = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        list.push({
+          number: data.number,
+          type: data.type,
+          name: data.name,
+          amount: data.amount,
+          isDisplay: data.isDisplay,
+          info: data.info,
+        });
+      });
+
+      //general
+      this.generalOptionList = list
+        .sort((a, b) => a.number - b.number)
+        .filter((item) => item.type === 'general' && item.isDisplay === 'Yes');
+
+      this.selectGeneralOption = this.generalOptionList[0].name;
+      this.selectGeneralAmount = this.generalOptionList[0].amount;
+
+      // target
+      this.targetOptionList = list
+        .sort((a, b) => a.number - b.number)
+        .filter((item) => item.type === 'target' && item.isDisplay === 'Yes');
+
+      this.selectTargetOption = this.targetOptionList[0].name;
+      this.selectTargetAmount = this.targetOptionList[0].amount;
+
+      // peak
+      this.peakOptionList = list
+        .sort((a, b) => a.number - b.number)
+        .filter((item) => item.type === 'peak' && item.isDisplay === 'Yes');
+
+      this.selectPeakOption = this.peakOptionList[0].name;
+      this.selectPeakAmount = this.peakOptionList[0].amount;
+    },
+    /**
+     * 수업 정보 load
+     */
     async getClass() {
       const querySnapshot = await getDocs(collection(db, 'class'));
       const list = [];

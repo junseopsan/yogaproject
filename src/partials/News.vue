@@ -4,7 +4,7 @@
       <div class="py-12 border-t border-gray-800 md:py-20">
         <!-- Section header -->
         <div v-if="postId === '99'" class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-          <h2 class="h2" data-aos="fade-up">요가프로젝트 이야기</h2>
+          <h2 class="h2" data-aos="fade-up">요프 이야기</h2>
         </div>
 
         <!-- Articles list -->
@@ -168,18 +168,6 @@ export default {
           this.isSecond = true;
         });
     },
-    // https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code
-    // 4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0
-    // async getToken() {
-    //   await axios
-    //     .get(
-    //       `https://www.tistory.com/oauth/access_token?client_id=c5b6a13d3ec47902bd01c891cb4425e2&client_secret=c5b6a13d3ec47902bd01c891cb4425e2c8e72fccc201f348d6c0dcd3283d9b34243ad1eb&redirect_uri=https://www.yogaproject.kr&code=18957167d825ccae37a6f48a03b61b498d6a10680d92cce2fa20eecda6e871e6b02d3960&grant_type=authorization_code`
-    //     )
-    //     .then((res) => {
-    //       const result = res;
-    //       console.log(result);
-    //     });
-    // },
   },
 };
 </script>

@@ -302,35 +302,45 @@ export default {
     },
     async deleteMember() {
       this.emitter.emit('showSpinner', true);
-      const auth = getAuth();
-      const user = auth.currentUser;
 
-      const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
-      await reauthenticateWithCredential(user, credential)
-        .then(() => {
-          console.log('re-authenticated.');
+      this.emitter.emit('showConfirm', {
+        isOpen: true,
+        msg: '정말 탈퇴하시겠습니까?',
+        callback: async (confirm) => {
+          if (confirm) {
+            const auth = getAuth();
+            const user = auth.currentUser;
 
-          deleteUser(user)
-            .then(() => {
-              this.emitter.emit('showSpinner', false);
-              this.emitter.emit('showToast', '요프에서 떠났습니다.');
-              setTimeout(() => {
-                this.$router.push({ path: '/' });
-              }, 1500);
-            })
-            .catch((error) => {
-              this.emitter.emit('showSpinner', false);
-              console.log(error.code);
-            });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          this.emitter.emit('showSpinner', false);
-          if (errorCode === 'auth/wrong-password') {
-            this.emitter.emit('showToast', '이전 비밀번호를 다시 입력해주세요.');
-            return false;
+            const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
+            await reauthenticateWithCredential(user, credential)
+              .then(() => {
+                console.log('re-authenticated.');
+                deleteUser(user)
+                  .then(() => {
+                    this.emitter.emit('showSpinner', false);
+                    this.emitter.emit('showToast', '요프에서 떠났습니다.');
+                    setTimeout(() => {
+                      this.$router.push({ path: '/' });
+                    }, 1500);
+                  })
+                  .catch((error) => {
+                    this.emitter.emit('showSpinner', false);
+                    console.log(error.code);
+                  });
+              })
+              .catch((error) => {
+                const errorCode = error.code;
+                this.emitter.emit('showSpinner', false);
+                if (errorCode === 'auth/wrong-password') {
+                  this.emitter.emit('showToast', '이전 비밀번호를 다시 입력해주세요.');
+                  return false;
+                }
+              });
+          } else {
+            console.log(false);
           }
-        });
+        },
+      });
     },
   },
 };

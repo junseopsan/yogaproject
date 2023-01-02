@@ -9,13 +9,27 @@
 
   plugins: [require('@tailwindcss/forms')]
 -->
-      <div class="flex justify-end mt-5">
-        <button
-          class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
-          @click="openModal('add')"
-        >
-          등록
-        </button>
+      <div class="flex justify-between mt-5">
+        <div class="">
+          <select
+            id="country"
+            v-model="selectOption"
+            class="font-bold text-gray-300 rounded-md w-2/1 form-select"
+            @change="(val) => changeOptionList(val)"
+          >
+            <option v-for="(item, index) in ['general', 'target', 'peak']" :key="index">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+        <div class="">
+          <button
+            class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
+            @click="openModal('add')"
+          >
+            추가
+          </button>
+        </div>
       </div>
       <div class="mt-3 overflow-hidden overflow-x-auto border border-gray-200 rounded-lg">
         <Modal id="modal" :show="modalOpen">
@@ -53,12 +67,39 @@
                 >
                   <div>
                     <label
+                      for="type"
+                      class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
+                      >타입</label
+                    >
+                    <Field
+                      v-model="optionInfo.type"
+                      as="select"
+                      name="타입"
+                      class="w-full text-gray-300 form-input disabled:opacity-25"
+                      :disabled="!isAdd"
+                      :class="{
+                        'border-red-500 focus:border-red-500': errors.타입,
+                      }"
+                    >
+                      <option
+                        v-for="(item, key) in ['general', 'target', 'peak']"
+                        :key="key"
+                        :value="item"
+                        :selected="item"
+                      >
+                        {{ item }}
+                      </option>
+                    </Field>
+                    <span class="mt-2 text-sm text-red-500">{{ errors.타입 }}</span>
+                  </div>
+                  <div>
+                    <label
                       for="number"
                       class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
                       >순서</label
                     >
                     <Field
-                      v-model="updateInfo.number"
+                      v-model="optionInfo.number"
                       as="input"
                       name="순서"
                       class="w-full text-gray-300 form-input"
@@ -73,37 +114,37 @@
                     <label
                       for="title"
                       class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
-                      >제목</label
+                      >옵션명</label
                     >
                     <Field
-                      v-model="updateInfo.title"
+                      v-model="optionInfo.name"
                       as="input"
-                      name="제목"
+                      name="옵션명"
                       class="w-full text-gray-300 form-input"
                       :class="{
-                        'border-red-500 focus:border-red-500': errors.제목,
+                        'border-red-500 focus:border-red-500': errors.옵션명,
                       }"
-                      placeholder="제목를 입력해주세요."
+                      placeholder="옵션명을 입력해주세요."
                     />
-                    <span class="mt-2 text-sm text-red-500">{{ errors.제목 }}</span>
+                    <span class="mt-2 text-sm text-red-500">{{ errors.옵션명 }}</span>
                   </div>
                   <div>
                     <label
                       for="content"
                       class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
-                      >내용</label
+                      >옵션가격</label
                     >
                     <Field
-                      v-model="updateInfo.content"
-                      as="textarea"
-                      name="내용"
-                      class="w-full text-gray-300 form-input h-[150px]"
+                      v-model="optionInfo.amount"
+                      as="input"
+                      name="옵션가격"
+                      class="w-full text-gray-300 form-input"
                       :class="{
-                        'border-red-500 focus:border-red-500': errors.내용,
+                        'border-red-500 focus:border-red-500': errors.옵션가격,
                       }"
-                      placeholder="내용를 입력해주세요."
+                      placeholder="옵션가격을 입력해주세요."
                     />
-                    <span class="mt-2 text-sm text-red-500">{{ errors.내용 }}</span>
+                    <span class="mt-2 text-sm text-red-500">{{ errors.옵션가격 }}</span>
                   </div>
                   <div>
                     <label
@@ -112,7 +153,7 @@
                       >노출여부</label
                     >
                     <Field
-                      v-model="updateInfo.isDisplay"
+                      v-model="optionInfo.isDisplay"
                       as="select"
                       name="노출여부"
                       class="w-full text-gray-300 form-input"
@@ -131,21 +172,35 @@
                     </Field>
                     <span class="mt-2 text-sm text-red-500">{{ errors.노출여부 }}</span>
                   </div>
+                  <div v-if="selectOption !== 'general'">
+                    <label
+                      for="content"
+                      class="block mb-1 font-bold text-gray-900 text-md dark:text-white"
+                      >정보</label
+                    >
+                    <Field
+                      v-model="optionInfo.info"
+                      as="textarea"
+                      name="정보"
+                      class="w-full text-gray-300 form-input h-[100px]"
+                      placeholder="정보를 입력해주세요."
+                    />
+                  </div>
                   <button
                     v-if="isAdd"
                     type="submit"
                     class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-xl px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-25 mt-8"
                     :disabled="!meta.valid"
-                    @click="addNotice"
+                    @click="addOption"
                   >
-                    등록하기
+                    추가하기
                   </button>
                   <button
                     v-if="!isAdd"
                     type="submit"
                     class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-xl px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-25 mt-8"
                     :disabled="!meta.valid"
-                    @click="updateNotice"
+                    @click="updateOption"
                   >
                     변경하기
                   </button>
@@ -154,7 +209,7 @@
                     type="submit"
                     class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-bold rounded-lg text-xl px-5 py-2.5 text-center dark:bg-bredlue-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-25 mt-8"
                     :disabled="!meta.valid"
-                    @click="deleteNotice"
+                    @click="deleteOption"
                   >
                     삭제하기
                   </button>
@@ -167,20 +222,36 @@
           <thead class="bg-gray-100">
             <tr>
               <th
-                class="px-4 py-2 font-medium text-left text-center text-gray-900 whitespace-nowrap"
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
               >
-                <div class="flex items-center gap-2">순서</div>
+                <div class="text-center">타입</div>
               </th>
-              <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">제목</div>
+              <th
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">순서</div>
               </th>
-              <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">내용</div>
+              <th
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">옵션명</div>
               </th>
-              <th class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap">
-                <div class="flex items-center gap-2">노출여부</div>
+              <th
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">옵션가격</div>
               </th>
-
+              <th
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">노출여부</div>
+              </th>
+              <th
+                v-if="selectOption !== 'general'"
+                class="px-4 py-2 font-medium text-center text-gray-900 whitespace-nowrap"
+              >
+                <div class="text-center">정보</div>
+              </th>
               <th
                 class="px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap"
               ></th>
@@ -189,24 +260,29 @@
 
           <tbody class="divide-y divide-gray-200">
             <tr
-              v-for="(item, index) in noticeList"
+              v-for="(item, index) in optionList"
               :key="index"
               class="cursor-pointer hover:bg-gray-400"
             >
               <td
                 class="w-[20px] px-4 py-2 text-center text-gray-700 whitespace-nowrap dark:bg-white"
               >
+                {{ item.type }}
+              </td>
+              <td
+                class="w-[10px] px-4 py-2 text-center text-gray-700 whitespace-nowrap dark:bg-white"
+              >
                 {{ item.number }}
               </td>
               <td
-                class="w-[20px] px-4 py-2 text-gray-700 whitespace-nowrap dark:bg-white"
+                class="w-[50px] px-4 py-2 text-gray-700 whitespace-nowrap dark:bg-white text-center"
               >
-                {{ item.title }}
+                {{ item.name }}
               </td>
               <td
-                class="px-4 py-2 text-gray-700 break-all whitespace-pre-line dark:bg-white"
+                class="w-[50px] px-4 py-2 text-gray-700 break-all whitespace-pre-line dark:bg-white text-center"
               >
-                {{ item.content }}
+                {{ item.amount.toLocaleString() }}
               </td>
               <td
                 class="w-[20px] px-4 py-2 text-gray-700 whitespace-nowrap dark:bg-white text-center"
@@ -214,11 +290,17 @@
                 {{ item.isDisplay }}
               </td>
               <td
+                v-if="selectOption !== 'general'"
+                class="w-[100px] px-4 py-2 text-gray-700 whitespace-pre-line dark:bg-white text-center"
+              >
+                {{ item.info }}
+              </td>
+              <td
                 class="w-[20px] px-4 py-2 text-gray-700 whitespace-nowrap dark:bg-white text-center"
               >
                 <button
                   class="ml-3 text-white bg-blue-600 rounded-md font-bolder btn-sm hover:bg-blue-700"
-                  @click="openModal(item.title)"
+                  @click="openModal(item.name)"
                 >
                   수정
                 </button>
@@ -233,8 +315,8 @@
 
 <script>
 import Modal from '../utils/Modal.vue';
-import Header from '../partials/Header.vue';
-import Footer from '../partials/Footer.vue';
+import Header from './Header.vue';
+import Footer from './Footer.vue';
 import {
   collection,
   query,
@@ -246,9 +328,10 @@ import {
 } from 'firebase/firestore';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required } from '@vee-validate/rules';
-import { db } from './../main';
+import { db } from '../main';
 import { localize } from '@vee-validate/i18n';
 import { v4 as uuidv4 } from 'uuid';
+
 defineRule('required', required);
 configure({
   // create and set a localization handler
@@ -259,7 +342,7 @@ configure({
   }),
 });
 export default {
-  name: 'NoticeAdmin',
+  name: 'OptionAdmin',
   components: {
     Modal,
     Header,
@@ -271,115 +354,140 @@ export default {
   data() {
     return {
       isAdd: false,
-      noticeList: [],
+      selectOption: 'general',
+      originList: [],
+      optionList: [],
       modalOpen: false,
-      updateInfo: {
+      optionInfo: {
+        type: 'general',
         number: 0,
-        docId: '',
-        title: '',
-        content: '',
+        name: '',
+        amount: '',
+        info: '',
         isDisplay: 'Yes',
+        docId: '',
       },
       schema: {
+        타입: 'required',
         순서: 'required',
-        제목: 'required',
-        내용: 'required',
+        옵션명: 'required',
+        옵션가격: 'required',
         노출여부: 'required',
       },
     };
   },
   async mounted() {
-    this.getNotice();
+    this.getOptions();
   },
   methods: {
-    async openModal(title) {
+    async openModal(name) {
       this.modalOpen = true;
 
-      if (title === 'add') {
+      if (name === 'add') {
         this.isAdd = true;
         this.$refs.form.resetForm();
-        this.updateInfo.number = 0;
-        this.updateInfo.docId = '';
-        this.updateInfo.title = '';
-        this.updateInfo.content = '';
+        this.optionInfo.number = 0;
+        this.optionInfo.name = '';
+        this.optionInfo.amount = 0;
+        this.optionInfo.docId = '';
 
         setTimeout(() => {
-          this.updateInfo.isDisplay = 'Yes';
+          if (this.selectOption !== 'general') this.optionInfo.info = '-';
+          this.optionInfo.type = this.selectOption;
+          this.optionInfo.isDisplay = 'Yes';
         }, 100);
       }
 
-      if (title !== 'add') {
+      if (name !== 'add') {
         this.isAdd = false;
-        const notice = collection(db, 'notice');
-        const q = query(notice, where('title', '==', title));
+        const notice = collection(db, 'option');
+        const q = query(notice, where('name', '==', name));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((result) => {
           const data = result.data();
-          const updateInfo = this.updateInfo;
+          const optionInfo = this.optionInfo;
+          optionInfo.type = data.type;
+          optionInfo.number = data.number;
+          optionInfo.name = data.name;
+          optionInfo.amount = data.amount;
+          optionInfo.isDisplay = data.isDisplay;
+          optionInfo.docId = result.id;
 
-          updateInfo.number = data.number;
-          updateInfo.title = data.title;
-          updateInfo.content = data.content;
-          updateInfo.isDisplay = data.isDisplay;
-          updateInfo.docId = result.id;
+          if (this.selectOption !== 'general') this.optionInfo.info = data.info;
         });
       }
     },
-    async addNotice() {
-      const updateInfo = this.updateInfo;
+    async addOption() {
+      const optionInfo = this.optionInfo;
       const data = {
-        number: updateInfo.number,
-        title: updateInfo.title,
-        content: updateInfo.content,
-        isDisplay: updateInfo.isDisplay,
+        type: optionInfo.type,
+        number: Number(optionInfo.number),
+        name: optionInfo.name,
+        amount: Number(optionInfo.amount),
+        isDisplay: optionInfo.isDisplay,
       };
+      if (this.selectOption !== 'general') {
+        if (this.optionInfo.info === '') {
+          this.emitter.emit('showToast', '정보를 입력해주세요.');
+          return false;
+        }
+        data.info = this.optionInfo.info;
+      }
+
       const uuid = uuidv4();
-      await setDoc(doc(db, 'notice', uuid), data)
+      await setDoc(doc(db, 'option', `${optionInfo.type}-${uuid}`), data)
         .then(() => {
-          this.emitter.emit('showToast', '성공적으로 등록되었습니다.');
+          this.emitter.emit('showToast', '성공적으로 추가되었습니다.');
           this.modalOpen = false;
-          this.getNotice();
+          this.getOptions();
         })
         .catch((error) => {
           console.log('error', error);
         });
     },
-    updateNotice() {
-      const updateInfo = this.updateInfo;
-      const docId = updateInfo.docId;
+    updateOption() {
+      const optionInfo = this.optionInfo;
+      const docId = optionInfo.docId;
       if (docId !== '') {
-        const docRef = doc(db, 'notice', docId);
+        const docRef = doc(db, 'option', docId);
         const data = {
-          number: updateInfo.number,
-          title: updateInfo.title,
-          content: updateInfo.content,
-          isDisplay: updateInfo.isDisplay,
+          type: optionInfo.type,
+          number: Number(optionInfo.number),
+          name: optionInfo.name,
+          amount: Number(optionInfo.amount),
+          isDisplay: optionInfo.isDisplay,
         };
+        if (this.selectOption !== 'general') {
+          if (this.optionInfo.info === '') {
+            this.emitter.emit('showToast', '정보를 입력해주세요.');
+            return false;
+          }
+          data.info = optionInfo.info;
+        }
         setDoc(docRef, data)
           .then(() => {
             this.emitter.emit('showToast', '성공적으로 변경되었습니다.');
             this.modalOpen = false;
-            this.getNotice();
+            this.getOptions();
           })
           .catch((error) => {
             console.log('error', error);
           });
       }
     },
-    async deleteNotice() {
+    async deleteOption() {
       this.emitter.emit('showConfirm', {
         isOpen: true,
         msg: '정말 삭제하시겠습니까?',
         callback: async (confirm) => {
           if (confirm) {
-            const updateInfo = this.updateInfo;
-            const docId = updateInfo.docId;
-
+            const optionInfo = this.optionInfo;
+            const docId = optionInfo.docId;
             if (docId !== '') {
-              await deleteDoc(doc(db, 'notice', docId)).then(() => {
+              await deleteDoc(doc(db, 'option', docId)).then(() => {
                 this.emitter.emit('showToast', '성공적으로 삭제되었습니다.');
                 this.modalOpen = false;
-                this.getNotice();
+                this.getOptions();
               });
             }
           } else {
@@ -391,20 +499,31 @@ export default {
     close() {
       this.modalOpen = false;
     },
-    async getNotice() {
-      const querySnapshot = await getDocs(collection(db, 'notice'));
+    async getOptions() {
+      const querySnapshot = await getDocs(collection(db, 'option'));
       const list = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         list.push({
+          type: data.type,
           number: data.number,
-          title: data.title,
-          content: data.content,
+          name: data.name,
+          amount: data.amount,
           isDisplay: data.isDisplay,
+          info: data.info,
         });
       });
 
-      this.noticeList = list.sort((a, b) => a.number - b.number);
+      this.originList = list.sort((a, b) => a.number - b.number);
+
+      this.optionList = list
+        .sort((a, b) => a.number - b.number)
+        .filter((item) => item.type === this.selectOption);
+    },
+    changeOptionList(event) {
+      this.optionList = this.originList
+        .sort((a, b) => a.number - b.number)
+        .filter((item) => item.type === event.target.value);
     },
   },
 };
