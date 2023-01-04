@@ -12,6 +12,7 @@ import './css/style.css';
 import mitt from 'mitt';
 import VueMobileDetection from 'vue-mobile-detection';
 import { getFirestore } from 'firebase/firestore';
+import VueGtag from 'vue-gtag-next';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -31,7 +32,9 @@ const fireApp = initializeApp(firebaseConfig);
 export const db = getFirestore(fireApp);
 
 const app = createApp(App);
-
+app.use(VueGtag, {
+  config: { id: 'G-BEFCHDMQG8' },
+});
 app.use(PrimeVue);
 app.use(VueMobileDetection);
 

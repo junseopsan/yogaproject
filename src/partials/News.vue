@@ -105,27 +105,28 @@ export default {
   },
   mounted() {
     this.getPostList();
+
     setTimeout(() => {
       const list = this.imgListNumber;
       list.forEach((item) => {
         this.getPostDetail(item.id);
       });
-    }, 1200);
+    }, 1500);
   },
   methods: {
     init() {
-      this.getPostList();
       setTimeout(() => {
         const list = this.imgListNumber;
+        this.getPostList();
         list.forEach((item) => {
           this.getPostDetail(item.id);
         });
-      }, 1200);
+      }, 1500);
     },
     async getPostList() {
       await axios
         .get(
-          `https://www.tistory.com/apis/post/list?access_token=4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0&output=json&blogName=junseopsan&page=1`
+          `https://www.tistory.com/apis/post/list?access_token=0b7bbfa7570be764ea2cad5f2bf14f13_e4d18326293413702f78de129e7bbe09&output=json&blogName=yogaproject&page=1`
         )
         .then((res) => {
           const result = res;
@@ -141,15 +142,20 @@ export default {
     getPostDetail(id) {
       axios
         .get(
-          `https://www.tistory.com/apis/post/read?access_token=4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0&output=json&blogName=junseopsan&postId=${id}`
+          `https://www.tistory.com/apis/post/read?access_token=0b7bbfa7570be764ea2cad5f2bf14f13_e4d18326293413702f78de129e7bbe09&output=json&blogName=yogaproject&postId=${id}`
         )
         .then((res) => {
           const result = res;
           const item = result.data.tistory.item;
-          const start = item.content.indexOf('https');
-          const end = item.content.indexOf('/img');
-          const url = item.content.substring(start, end + 8);
 
+          let start = item.content.indexOf('https');
+          let end = item.content.indexOf('/img');
+          let url = item.content.substring(start, end + 8);
+
+          if (url.includes('thumbnail=')) {
+            start = url.indexOf('thumbnail=');
+            url = url.substring(start + 11);
+          }
           if (this.newPostId !== item.id) {
             this.realList.push({
               ...item,

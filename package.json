@@ -27,6 +27,7 @@
     "vee-validate": "^4.7.2",
     "vue": "^3.2.20",
     "vue-flatpickr-component": "^11.0.1",
+    "vue-gtag-next": "^1.14.0",
     "vue-mobile-detection": "^2.0.1",
     "vue-router": "^4.0.12",
     "yup": "^0.32.11"

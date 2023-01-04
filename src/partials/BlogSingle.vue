@@ -42,7 +42,7 @@
                             class="inline-flex px-3 py-1 ml-2 text-center text-gray-100 transition duration-150 ease-in-out rounded-full"
                             :class="{
                               'bg-purple-600 hover:bg-purple-700': index % 2 === 0,
-                              'bg-pink-600 hover:bg-pink-700': index % 2 !== 0,
+                              'bg-pink-600 hover:bg-pink-700 mt-2': index % 2 !== 0,
                             }"
                             >{{ sub }}</a
                           >
@@ -101,12 +101,11 @@ export default {
     getBlogDetail() {
       axios
         .get(
-          `https://www.tistory.com/apis/post/read?access_token=4a800f44d3188bbc97ea4a98c1973aee_58968bdc78514a905a01f688fa4ac4e0&output=json&blogName=junseopsan&postId=${this.postId}`
+          `https://www.tistory.com/apis/post/read?access_token=0b7bbfa7570be764ea2cad5f2bf14f13_e4d18326293413702f78de129e7bbe09&output=json&blogName=yogaproject&postId=${this.postId}`
         )
         .then((res) => {
           const result = res;
           const item = result.data.tistory.item;
-          console.log(item);
           this.blogInfo = item;
         });
     },
