@@ -205,9 +205,11 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
+import { collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
+import { db } from './../main';
 
 defineRule('required', required);
 defineRule('email', email);
@@ -258,6 +260,7 @@ export default {
       phone: '',
       email: '',
       oldPassword: '',
+      docId: '',
       schema: {
         이름: 'required',
         전화번호: 'required|numeric|phone_valid',
@@ -313,8 +316,17 @@ export default {
 
             const credential = EmailAuthProvider.credential(this.email, this.oldPassword);
             await reauthenticateWithCredential(user, credential)
-              .then(() => {
+              .then(async () => {
                 console.log('re-authenticated.');
+                const member = collection(db, 'member');
+                const q = query(member, where('email', '==', this.email));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((result) => {
+                  this.docId = result.id;
+                });
+
+                await deleteDoc(doc(db, 'member', this.docId));
+
                 deleteUser(user)
                   .then(() => {
                     this.emitter.emit('showSpinner', false);
