@@ -135,6 +135,10 @@ import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
+import { v4 as uuidv4 } from 'uuid';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './../main';
+import moment from 'moment';
 
 defineRule('required', required);
 defineRule('email', email);
@@ -193,6 +197,20 @@ export default {
   },
   mounted() {},
   methods: {
+    async addMember() {
+      const data = {
+        name: this.name,
+        email: this.email,
+        phone: this.phone,
+        startTime: moment().format('YYYY-MM-DD'),
+      };
+      const uuid = uuidv4();
+      await setDoc(doc(db, 'member', uuid), data)
+        .then(() => {})
+        .catch((error) => {
+          console.log('error', error);
+        });
+    },
     async updateProfile() {
       await updateProfile(getAuth().currentUser, {
         displayName: this.name,
@@ -210,6 +228,7 @@ export default {
       this.emitter.emit('showSpinner', true);
       await createUserWithEmailAndPassword(getAuth(), this.email, this.password)
         .then(() => {
+          this.addMember();
           this.updateProfile();
         })
         .catch((error) => {

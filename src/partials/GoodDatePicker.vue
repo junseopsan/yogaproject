@@ -19,6 +19,7 @@
 <script>
 import flatPickr from 'vue-flatpickr-component';
 import moment from 'moment';
+
 export default {
   name: 'Datepicker',
   components: {
