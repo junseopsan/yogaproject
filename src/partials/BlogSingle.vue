@@ -118,4 +118,7 @@ export default {
   font-weight: bold;
   background: none !important;
 }
+iframe {
+  width: 100% !important;
+}
 </style>
