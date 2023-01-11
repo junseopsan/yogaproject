@@ -25,10 +25,11 @@
               </h1>
               <p class="text-lg text-gray-400" data-aos="fade-up" data-aos-delay="400">
                 <button
-                  class="w-1/3 text-white bg-blue-600 rounded-md cursor-pointer mt-7 btn hover:bg-blue-700 disabled:opacity-25"
+                  class="text-white bg-blue-600 rounded-md cursor-pointer sm:w-1/2 md: mt-7 btn hover:bg-blue-700 disabled:opacity-25 md:w-1/4"
                   @click="$router.push({ path: '/' })"
                 >
-                  메인페이지로 이동
+                  메인페이지로<br />
+                  이동
                 </button>
               </p>
             </div>

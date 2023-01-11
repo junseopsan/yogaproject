@@ -36,10 +36,10 @@
                 data-aos-delay="400"
               >
                 <button
-                  class="w-1/3 text-white bg-blue-600 rounded-md cursor-pointer mt-7 btn hover:bg-blue-700 disabled:opacity-25"
+                  class="text-white bg-blue-600 rounded-md cursor-pointer sm:w-1/2 md: mt-7 btn hover:bg-blue-700 disabled:opacity-25 md:w-1/4"
                   @click="$router.push({ path: '/' })"
                 >
-                  메인페이지로 이동
+                  메인페이지로 <br />이동
                 </button>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default {
       this.sucessPayInfo.orderId = query.orderId;
       this.sucessPayInfo.paymentKey = query.paymentKey;
 
-      if (this.sucessPayInfo.amount === getAmount) {
+      if (this.sucessPayInfo.amount == getAmount) {
         await axios
           .post(
             `https://api.tosspayments.com/v1/payments/confirm`,
@@ -106,20 +106,20 @@ export default {
             {
               headers: {
                 'Authorization':
-                  'Basic dGVzdF9za19ZeVpxbWtLZVA4Z21uTHg0WlBPVmJRUnhCOWxHOg==',
+                  'Basic bGl2ZV9za19LbWE2MFJaYmxycXlBcEE5UVc1cnd6WVdCbjE0Og==',
                 'Content-Type': 'application/json',
               },
             }
           )
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             const result = res.data;
             if (result.status === 'DONE') {
               this.isPaySuccess = true;
             }
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
             this.isPaySuccess = false;
             const data = err.response.data;
             this.message = data.message;

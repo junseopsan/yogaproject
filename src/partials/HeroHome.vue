@@ -291,6 +291,9 @@
                 </div>
               </div>
             </div>
+            <Modal id="modal" :show="isPayModal">
+              <div id="payment-method"></div>
+            </Modal>
           </Modal>
         </div>
       </div>
@@ -312,6 +315,8 @@ import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, numeric } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
+// import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
+
 import { v4 as uuidv4 } from 'uuid';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './../main';
@@ -370,6 +375,7 @@ export default {
       selectedAmount: 0,
       amount: '',
       modalOpen: false,
+      isPayModal: false,
       list: [],
       formatter: { date: 'YYYY-MM-DD', month: 'MM' },
       mainTitle: '" 행복하세요.<br />밝게 지내요. <br />있는 그대로의 자신이 되세요. "',
@@ -533,19 +539,32 @@ export default {
       });
     },
     async toss() {
-      const clientKey = process.env.VITE_TOSS_CLIENT_KEY;
       const uuid = uuidv4();
+      const clientKey = process.env.VITE_TOSS_CLIENT_KEY;
+      // const customerKey = uuid;
+
       this.emitter.emit('showSpinner', true);
+      // await loadPaymentWidget(clientKey, customerKey)
+      //   .then((paymentWidget) => {
+      //     this.isPayModal = true;
+      //     paymentWidget.renderPaymentMethods('#payment-method', this.selectedAmount);
+      //   })
+      //   .catch((error) => {
+      //     this.emitter.emit('showToast', error.message);
+      //     return false;
+      //   });
       await loadTossPayments(clientKey)
         .then((tossPayments) => {
           tossPayments
             .requestPayment('카드', {
               amount: this.selectedAmount,
+              // amount: 100,
               orderId: uuid,
               orderName: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
               customerName: this.guestInfo.name,
               successUrl: 'https://www.yogaproject.kr/success',
               failUrl: 'https://www.yogaproject.kr/fail',
+              maxCardInstallmentPlan: 3,
               // successUrl: 'http://127.0.0.1:5173/success',
               // failUrl: 'http://127.0.0.1:5173/fail',
             })

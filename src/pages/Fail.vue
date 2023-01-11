@@ -9,21 +9,27 @@
           <div class="pt-32 pb-12 md:pt-40 md:pb-20">
             <!-- Page header -->
             <div class="max-w-3xl pb-12 mx-auto text-center md:pb-20">
-              <h1 class="h1">
-                {{ message !== '' ? `${message} 🙏` : `결제가 실패하였습니다. <br />다시
-                시도해주세요 🙏` }}
-              </h1>
+              <h1
+                class="h1"
+                v-html="
+                  message !== ''
+                    ? `${message} 🙏`
+                    : `결제가 실패하였습니다. <br />다시
+                시도해주세요 🙏`
+                "
+              ></h1>
             </div>
             <div
-              class="mt-2 text-lg text-gray-400"
+              class="flex justify-center mt-2 text-lg text-gray-400"
               data-aos="fade-up"
               data-aos-delay="400"
             >
               <button
-                class="w-1/3 text-white bg-blue-600 rounded-md cursor-pointer mt-7 btn hover:bg-blue-700 disabled:opacity-25"
+                class="text-white bg-blue-600 rounded-md cursor-pointer sm:w-1/2 md: mt-7 btn hover:bg-blue-700 disabled:opacity-25 md:w-1/4"
                 @click="$router.push({ path: '/' })"
               >
-                메인페이지로 이동
+                메인페이지로<br />
+                이동
               </button>
             </div>
           </div>

@@ -112,13 +112,13 @@ export default {
   },
 };
 </script>
-<style>
+<style scope="this api replaced by slot-scope in 2.5.0+">
 .blog span {
   color: darkgray !important;
   font-weight: bold;
   background: none !important;
 }
-iframe {
+.blog iframe {
   width: 100% !important;
 }
 </style>
