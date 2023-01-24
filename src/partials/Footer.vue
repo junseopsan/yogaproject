@@ -149,7 +149,7 @@
         <div class="md:flex md:items-center md:justify-between">
           <!-- Copyrights note -->
           <div class="mr-4 text-sm text-gray-400">
-            &copy; Copyright (C) 2022 YOGA PROJECT by San.
+            &copy; Copyright (C) 2022 YOGA PROJECT.
           </div>
         </div>
       </div>

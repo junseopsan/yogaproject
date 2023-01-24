@@ -558,15 +558,12 @@ export default {
           tossPayments
             .requestPayment('카드', {
               amount: this.selectedAmount,
-              // amount: 100,
               orderId: uuid,
               orderName: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
               customerName: this.guestInfo.name,
               successUrl: 'https://www.yogaproject.kr/success',
               failUrl: 'https://www.yogaproject.kr/fail',
               maxCardInstallmentPlan: 3,
-              // successUrl: 'http://127.0.0.1:5173/success',
-              // failUrl: 'http://127.0.0.1:5173/fail',
             })
             .catch((error) => {
               this.emitter.emit('showToast', error.message);
@@ -581,6 +578,21 @@ export default {
     },
     async goPay() {
       localStorage.setItem('amount', this.selectedAmount);
+      localStorage.setItem(
+        'payInfo',
+        JSON.stringify({
+          name: this.guestInfo.name,
+          phoneNumber: this.guestInfo.phoneNumber,
+          classTitle: this.modalInfo.title + ' : ' + this.modalInfo.typeName,
+          selectPlace: this.selectPlace,
+          selectPeriod: this.selectPeriod,
+          startDate: this.startDate,
+          endDate: this.endDate,
+          somethingText: this.guestInfo.somethingText,
+          selectedAmount: this.selectedAmount,
+          selectPayMethod: this.selectPayMethod,
+        })
+      );
       if (this.selectPayMethod === '카드') {
         this.toss();
       } else if (this.selectPayMethod === '무통장입금') {

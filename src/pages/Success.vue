@@ -30,11 +30,7 @@
               <div v-else-if="!isPaySuccess">
                 <h1 class="h1">{{ `${message !== '' ? message + ' 🙏' : ''}` }}</h1>
               </div>
-              <div
-                class="mt-2 text-lg text-gray-400"
-                data-aos="fade-up"
-                data-aos-delay="400"
-              >
+              <div class="mt-2 text-lg text-gray-400">
                 <button
                   class="text-white bg-blue-600 rounded-md cursor-pointer sm:w-1/2 md: mt-7 btn hover:bg-blue-700 disabled:opacity-25 md:w-1/4"
                   @click="$router.push({ path: '/' })"
@@ -54,6 +50,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import Header from '../partials/Header.vue';
 import Footer from '../partials/Footer.vue';
 import axios from 'axios';
@@ -87,6 +84,7 @@ export default {
     if (query && query.type === 'cash') {
       this.type = 'cash';
       this.cashInfo.amount = getAmount.toLocaleString();
+      this.googlesheet();
     }
     if (query && query.orderId) {
       this.type = 'card';
@@ -112,14 +110,13 @@ export default {
             }
           )
           .then((res) => {
-            // console.log(res);
             const result = res.data;
             if (result.status === 'DONE') {
               this.isPaySuccess = true;
+              this.googlesheet();
             }
           })
           .catch((err) => {
-            // console.log(err);
             this.isPaySuccess = false;
             const data = err.response.data;
             this.message = data.message;
@@ -127,6 +124,32 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    async googlesheet() {
+      const payInfo = JSON.parse(localStorage.getItem('payInfo'));
+      await axios
+        .get(
+          `https://script.google.com/macros/s/AKfycbxnyxA6FvWaWcnhW4KmEPVkPKZj3Q1Zv0A8jGmGBOO-2eD252zdzVoo47v2dUzQ6kdkSQ/exec`,
+          {
+            params: {
+              신청일: moment().format('YYYY-MM-DD'),
+              이름: payInfo.name,
+              전화번호: payInfo.phoneNumber,
+              수업이름: payInfo.classTitle,
+              수련장소: payInfo.selectPlace,
+              수련기간: payInfo.selectPeriod,
+              수련시작일: payInfo.startDate,
+              수련종료일: payInfo.endDate,
+              하고싶은말: payInfo.somethingText,
+              수련금액: payInfo.selectedAmount,
+              결제방법: payInfo.selectPayMethod,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
+    },
+  },
 };
 </script>
